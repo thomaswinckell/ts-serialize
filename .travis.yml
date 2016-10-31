@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "6.3.1"
-before_install:
+before_deploy:
   - rvm install 2.2.5
 deploy:
   provider: npm
