@@ -1,12 +1,12 @@
 import * as assert              from 'power-assert';
 import {isEqual} from 'lodash';
 
-import {Serializable, Serialize, SerializeOpt} from "../../src";
-import {Optional, Some} from "../../src/utils/Optional";
-import {SerializeArray} from "../../src/core/SerializeArray";
+import {Serializable, Serialize, SerializeOpt} from "../src";
+import {Optional, Some} from "../src/utils/Optional";
+import {SerializeArray} from "../src/core/SerializeArray";
 
 
-describe('Serialize', () => {
+describe('ts-serialize', () => {
 
     class User extends Serializable< User > {
 
