@@ -7,7 +7,7 @@ import Clazz from "../utils/Clazz";
 
 import FieldsMapper from "./FieldsMapper";
 import IError from "../error/IError";
-import {JsObject} from "../utils/Json";
+import {JsObject} from "ts-json-definition";
 
 
 abstract class Serializable< T > {

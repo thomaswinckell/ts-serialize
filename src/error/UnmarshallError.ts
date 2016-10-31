@@ -1,4 +1,4 @@
-import {JsValue} from "../utils/Json";
+import {JsValue} from "ts-json-definition";
 import {Optional, None} from "../utils/Optional";
 import Clazz from "../utils/Clazz";
 

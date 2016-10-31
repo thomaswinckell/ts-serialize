@@ -2,7 +2,7 @@ import {Unmarshaller, defaultMarshaller, defaultUnmarshaller, Marshaller} from "
 import Serializable from "./Serializable";
 import {None, Optional, Some} from "../utils/Optional";
 import FieldsMapper from './FieldsMapper';
-import {Json} from "../utils/Json";
+import {Json} from "ts-json-definition";
 
 
 

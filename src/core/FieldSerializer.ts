@@ -1,6 +1,6 @@
 import {UnmarshallError} from "../error/UnmarshallError";
 import {Either} from "../utils/Either";
-import {Json} from "../utils/Json";
+import {Json} from "ts-json-definition";
 
 interface FieldSerializer {
     unmarshaller        : (value : any, json : Json, clazz : any, jsonPath : string[], classPath : string[]) => Either< UnmarshallError[], any >;

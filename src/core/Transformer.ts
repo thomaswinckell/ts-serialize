@@ -1,5 +1,5 @@
 import {UnmarshallError} from "../error/UnmarshallError";
-import {JsValue, Json} from "../utils/Json";
+import {JsValue, Json} from "ts-json-definition";
 import {Optional, Some} from "../utils/Optional";
 import Clazz from "../utils/Clazz";
 import {Either, Right, Left} from "../utils/Either";

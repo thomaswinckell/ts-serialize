@@ -1,7 +1,7 @@
 import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer";
 import {Optional, Some} from "../utils/Optional";
 import Clazz from "../utils/Clazz";
-import {JsValue, Json, JsArray} from "../utils/Json";
+import {JsValue, Json, JsArray} from "ts-json-definition";
 import {UnmarshallError} from "../error/UnmarshallError";
 import {Either, Left, Right} from "../utils/Either";
 import Serialize from "./Serialize";
