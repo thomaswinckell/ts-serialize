@@ -22,7 +22,7 @@
   "main": "index.ts",
   "scripts": {
     "pretest": "rm -rf build",
-    "test": "tsc --p tsconfig.json && mocha \"build/test/**/*.js\"",
+    "test": "tsc --p tsconfig.json && mocha \"build/test/**/*.js\""
   },
   "dependencies": {
     "@types/reflect-metadata": "0.0.5",
