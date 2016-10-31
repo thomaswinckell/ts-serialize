@@ -35,7 +35,6 @@
     "lodash": "^4.16.4",
     "mocha": "^3.1.2",
     "power-assert": "^1.4.1",
-    "ts-loader": "^0.9.2",
     "typescript": "^2.0.3",
     "typings": "^1.4.0"
   }
