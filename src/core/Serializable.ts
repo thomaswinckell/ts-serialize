@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import {Either, Right, Left} from "../utils/Either";
+import {Either, Right, Left} from "scalts";
 import JsonParseError from "../error/JsonParseError";
 import {UnmarshallError} from "../error/UnmarshallError";
-import Clazz from "../utils/Clazz";
+import Constructor from "../utils/Constructor";
 
 import FieldsMapper from "./FieldsMapper";
 import IError from "../error/IError";
@@ -25,7 +25,7 @@ abstract class Serializable< T > {
     }
 
     static fromJson< T >( json : JsObject, jsonPath : string[] = [], classPath : string[] = [] ) : Either< UnmarshallError[], T > {
-        const constructor = (< Clazz< T > >this.prototype.constructor);
+        const constructor = (< Constructor< T > >this.prototype.constructor);
         let obj = new constructor();
         let serializeErrors = [];
         FieldsMapper.getFieldByConstructorName(constructor.name).forEach(prop => {

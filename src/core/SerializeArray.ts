@@ -1,9 +1,8 @@
 import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer";
-import {Optional, Some} from "../utils/Optional";
-import Clazz from "../utils/Clazz";
+import Constructor from "../utils/Constructor";
 import {JsValue, Json, JsArray} from "ts-json-definition";
 import {UnmarshallError} from "../error/UnmarshallError";
-import {Either, Left, Right} from "../utils/Either";
+import {Either, Left, Right, Optional, Some} from "scalts";
 import Serialize from "./Serialize";
 import {isDefined} from "../utils/index";
 
@@ -15,7 +14,7 @@ function isJsArray(value : any ) : boolean {
 
 export const SerializeArray = function< T >( type : Function, jsonPropertyName ?: string, unmarshaller : Unmarshaller< T > = defaultUnmarshaller, marshaller : Marshaller< T > = defaultMarshaller ) {
 
-    const arrayUnmarshaller : Unmarshaller< Array< T > > = (value : JsValue, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Clazz< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) : Either< UnmarshallError[], Array< T > > => {
+    const arrayUnmarshaller : Unmarshaller< Array< T > > = (value : JsValue, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) : Either< UnmarshallError[], Array< T > > => {
 
         if( !isJsArray(value) ) {
             // if there is a default value
@@ -39,7 +38,7 @@ export const SerializeArray = function< T >( type : Function, jsonPropertyName ?
         }
     };
 
-    const arrayMarshaller : Marshaller< Array< T > > = (value : Array< T >, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Clazz< any >, mbType : Optional< Function >) => {
+    const arrayMarshaller : Marshaller< Array< T > > = (value : Array< T >, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Constructor< any >, mbType : Optional< Function >) => {
         return (<JsValue>value.map( v => marshaller( v, json, clazz, jsonPropertyName, classPropertyName, target, mbType ) ));
     };
 

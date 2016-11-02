@@ -1,5 +1,5 @@
 import {UnmarshallError} from "../error/UnmarshallError";
-import {Either} from "../utils/Either";
+import {Either} from "scalts";
 import {Json} from "ts-json-definition";
 
 interface FieldSerializer {

@@ -1,9 +1,8 @@
 import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer";
-import Clazz from "../utils/Clazz";
-import {Optional, None, Some} from "../utils/Optional";
+import Constructor from "../utils/Constructor";
+import {Optional, None, Some, Either, Left, Right} from "scalts";
 import {JsValue, Json} from "ts-json-definition";
 import {UnmarshallError} from "../error/UnmarshallError";
-import {Either, Left, Right} from "../utils/Either";
 import Serialize from "./Serialize";
 
 
@@ -15,7 +14,7 @@ const NoneJsValue = null;
 
 
 const SerializeOpt = function< T >( type : Function, jsonPropertyName ?: string, unmarshaller : Unmarshaller< T > = defaultUnmarshaller, marshaller : Marshaller< T > = defaultMarshaller ) {
-    const optUnmarshaller : Unmarshaller< Optional< T > > = (value : JsValue, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Clazz< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) : Either< UnmarshallError[], Optional< T > > => {
+    const optUnmarshaller : Unmarshaller< Optional< T > > = (value : JsValue, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) : Either< UnmarshallError[], Optional< T > > => {
 
         if( isNoneJsValue(value) ) {
             return Right< UnmarshallError[], Optional< T > >(None);
@@ -28,7 +27,7 @@ const SerializeOpt = function< T >( type : Function, jsonPropertyName ?: string,
             );
     };
 
-    const optMarshaller : Marshaller< Optional< T > > = (value : Optional< T >, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Clazz< any >, mbType : Optional< Function >) => {
+    const optMarshaller : Marshaller< Optional< T > > = (value : Optional< T >, json : Json, clazz : any, jsonPropertyName : string, classPropertyName : string, target : Constructor< any >, mbType : Optional< Function >) => {
         if(value.isEmpty) {
             return NoneJsValue;
         } else {

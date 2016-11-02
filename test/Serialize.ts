@@ -2,7 +2,7 @@ import * as assert              from 'power-assert';
 import {isEqual} from 'lodash';
 
 import {Serializable, Serialize, SerializeOpt} from "../src";
-import {Optional, Some} from "../src/utils/Optional";
+import {Optional, Some} from "scalts";
 import {SerializeArray} from "../src/core/SerializeArray";
 
 
