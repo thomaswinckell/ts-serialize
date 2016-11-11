@@ -25,9 +25,7 @@
     "test": "tsc --p tsconfig.json && mocha \"build/test/**/*.js\""
   },
   "dependencies": {
-    "@types/reflect-metadata": "0.0.5",
-    "reflect-metadata": "^0.1.8",
-    "scalts": "^0.4.0",
+    "scalts": "^0.5.1",
     "ts-json-definition": "^0.0.1"
   },
   "devDependencies": {

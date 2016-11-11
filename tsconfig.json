@@ -11,10 +11,10 @@
     },
     "include" : [
         "src/**/*",
-        "test/**/*"
+        "test/**/*",
+        "node_modules/scalts/*"
     ],
     "exclude": [
-        "node_modules",
         "typings"
     ]
 }
