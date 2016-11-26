@@ -1,6 +1,6 @@
 {
   "name": "ts-serialize",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Serialization using Typescript decorators",
   "keywords": [
     "typescript",
@@ -20,6 +20,12 @@
     "url": "https://github.com/thomaswinckell/ts-serialize.git"
   },
   "main": "index.ts",
+  "files": [
+    "src",
+    "index.ts",
+    "tsconfig.json",
+    "README.md"
+  ],
   "scripts": {
     "pretest": "rm -rf build",
     "test": "tsc --p tsconfig.json && mocha \"build/test/**/*.js\""

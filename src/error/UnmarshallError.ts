@@ -6,7 +6,7 @@ import IError from './IError';
 
 
 
-export class UnmarshallError implements IError {
+export default class UnmarshallError implements IError {
 
     constructor(
         public value : JsValue,
