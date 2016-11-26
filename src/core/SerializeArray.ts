@@ -1,7 +1,7 @@
 import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer";
 import Constructor from "../utils/Constructor";
 import {JsValue, Json, JsArray} from "ts-json-definition";
-import {UnmarshallError} from "../error/UnmarshallError";
+import UnmarshallError from "../error/UnmarshallError";
 import {Either, Left, Right, Optional, Some} from "scalts";
 import Serialize from "./Serialize";
 import {isDefined} from "../utils/index";

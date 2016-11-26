@@ -2,7 +2,7 @@ import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "
 import Constructor from "../utils/Constructor";
 import {Optional, None, Some, Either, Left, Right} from "scalts";
 import {JsValue, Json} from "ts-json-definition";
-import {UnmarshallError} from "../error/UnmarshallError";
+import UnmarshallError from "../error/UnmarshallError";
 import Serialize from "./Serialize";
 
 

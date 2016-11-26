@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import {Either, Right, Left} from "scalts";
 import JsonParseError from "../error/JsonParseError";
-import {UnmarshallError} from "../error/UnmarshallError";
+import UnmarshallError from "../error/UnmarshallError";
 import Constructor from "../utils/Constructor";
 
 import FieldsMapper from "./FieldsMapper";

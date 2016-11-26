@@ -1,4 +1,4 @@
-import {UnmarshallError} from "../error/UnmarshallError";
+import UnmarshallError from "../error/UnmarshallError";
 import {JsValue, Json} from "ts-json-definition";
 import {Optional, Some, Either, Right, Left} from "scalts";
 import Constructor from "../utils/Constructor";
