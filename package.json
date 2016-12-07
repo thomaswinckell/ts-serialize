@@ -1,6 +1,6 @@
 {
   "name": "ts-serialize",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Serialization using Typescript decorators",
   "keywords": [
     "typescript",
@@ -35,7 +35,7 @@
     "test": "tsc && mocha \"./test/**/*.js\""
   },
   "dependencies": {
-    "scalts": "^0.5.2",
+    "scalts": "^0.6.0",
     "ts-json-definition": "^0.0.1"
   },
   "devDependencies": {
