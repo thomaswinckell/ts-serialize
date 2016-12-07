@@ -27,7 +27,7 @@ abstract class Serializable< T > {
     static fromJson< T >( json : JsObject, jsonPath : string[] = [], classPath : string[] = [] ) : Either< UnmarshallError[], T > {
         const constructor = (< Constructor< T > >this.prototype.constructor);
         let obj = new constructor();
-        let serializeErrors = [];
+        let serializeErrors : UnmarshallError[] = [];
         FieldsMapper.getFieldByConstructorName(constructor.name).forEach(prop => {
             const res = (<Either< UnmarshallError[], any >>prop.unmarshaller(json[prop.jsonPropertyName], json, obj, jsonPath, classPath));
             if(res.isLeft) {

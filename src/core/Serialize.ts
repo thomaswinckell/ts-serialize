@@ -6,17 +6,14 @@ import {Json} from "ts-json-definition";
 
 
 
-function Serialize< T >(jsonPropertyName ?: string, unmarshaller : Unmarshaller< T > = defaultUnmarshaller, marshaller : Marshaller< T > = defaultMarshaller, mbGivenType : Optional< any > = None ) {
+function Serialize< T >(mbJsonPropertyName ?: string, unmarshaller : Unmarshaller< T > = defaultUnmarshaller, marshaller : Marshaller< T > = defaultMarshaller, mbGivenType : Optional< any > = None ) {
 
     return function(target : any, classPropertyName : string) {
 
         if(Serializable.prototype.isPrototypeOf(target)) {
 
             let reflectedType = null;
-
-            if(!jsonPropertyName) {
-                jsonPropertyName = classPropertyName;
-            }
+            const jsonPropertyName = mbJsonPropertyName || classPropertyName;
 
             if( mbGivenType.isEmpty ) {
 

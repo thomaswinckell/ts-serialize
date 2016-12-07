@@ -1,20 +1,20 @@
 {
     "compilerOptions": {
-        "outDir": "./build/",
-        "sourceMap": true,
-        "noImplicitAny": false,
         "target": "es5",
-        "jsx": "react",
-        "emitDecoratorMetadata": true,
+        "module": "commonjs",
+        "strictNullChecks": true,
+        "declaration": true,
+        "noImplicitAny": true,
         "experimentalDecorators": true,
-        "removeComments": false
+        "emitDecoratorMetadata": true,
+        "removeComments": false,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "rootDir": "./src"
     },
-    "include" : [
-        "src/**/*",
-        "test/**/*",
-        "node_modules/scalts/*"
-    ],
-    "exclude": [
-        "typings"
+    "include": [
+        "index.ts",
+        "./test/**/*"
     ]
 }

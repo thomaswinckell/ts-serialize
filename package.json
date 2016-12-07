@@ -1,6 +1,6 @@
 {
   "name": "ts-serialize",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Serialization using Typescript decorators",
   "keywords": [
     "typescript",
@@ -19,29 +19,33 @@
     "type": "git",
     "url": "https://github.com/thomaswinckell/ts-serialize.git"
   },
-  "main": "index.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
-    "src",
-    "index.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "index.d.ts",
+    "index.js",
     "tsconfig.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "pretest": "rm -rf build",
-    "test": "tsc --p tsconfig.json && mocha \"build/test/**/*.js\""
+    "build": "tsc",
+    "test": "tsc && mocha \"./test/**/*.js\""
   },
   "dependencies": {
-    "scalts": "^0.5.1",
+    "scalts": "^0.5.2",
     "ts-json-definition": "^0.0.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.37",
-    "@types/mocha": "^2.2.32",
+    "@types/lodash": "^4.14.42",
+    "@types/mocha": "^2.2.33",
     "@types/power-assert": "^1.4.29",
-    "lodash": "^4.16.4",
-    "mocha": "^3.1.2",
-    "power-assert": "^1.4.1",
-    "typescript": "^2.0.3",
-    "typings": "^1.4.0"
+    "lodash": "^4.17.2",
+    "mocha": "^3.2.0",
+    "power-assert": "^1.4.2",
+    "typescript": "^2.1.4",
+    "typings": "^2.0.0"
   }
 }

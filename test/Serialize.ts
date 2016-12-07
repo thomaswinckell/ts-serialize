@@ -1,9 +1,9 @@
-import * as assert              from 'power-assert';
-import {isEqual} from 'lodash';
+import * as assert      from "power-assert"
+import {isEqual}        from "lodash"
+import {Optional, Some} from "scalts"
 
-import {Serializable, Serialize, SerializeOpt} from "../src";
-import {Optional, Some} from "scalts";
-import {SerializeArray} from "../src/core/SerializeArray";
+import {Serializable, Serialize, SerializeOpt} from "../src"
+import {SerializeArray} from "../src/core/SerializeArray"
 
 
 describe('ts-serialize', () => {
@@ -74,7 +74,7 @@ describe('ts-serialize', () => {
     };
 
     const referenceUser = new User(json._id, Some(json.name), +json.age, [ new User("son", Some("David"), 13), new User("daughter", Some("Jane"), 18) ]);
-    const mbUserFromJson = User.fromJson< User >(json);
+    const mbUserFromJson = User.fromJson< User >(json)
 
     mbUserFromJson.fold< void >( errors => errors.forEach( e => e.print() ), json => console.log(json) );
 

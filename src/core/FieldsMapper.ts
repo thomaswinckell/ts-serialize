@@ -1,21 +1,21 @@
-import FieldSerializer from "./FieldSerializer";
+import FieldSerializer from "./FieldSerializer"
 
 
-class FieldsMapper {
+namespace FieldsMapper {
 
-    private mapper : { [ constructorName : string ] : FieldSerializer[] } = {};
+    let mapper : { [ constructorName : string ] : FieldSerializer[] } = {};
 
-    getFieldByConstructorName( constructorName : string ) : FieldSerializer[] {
-        return this.mapper[ constructorName ] || [];
+    export function getFieldByConstructorName( constructorName : string ) : FieldSerializer[] {
+        return mapper[ constructorName ] || [];
     }
 
-    registerField( constructorName : string, field : FieldSerializer ) : void {
-        if( this.mapper[ constructorName ] ) {
-            this.mapper[constructorName] = this.mapper[constructorName].concat( field );
+    export function registerField( constructorName : string, field : FieldSerializer ) : void {
+        if( mapper[ constructorName ] ) {
+            mapper[constructorName] = mapper[constructorName].concat( field );
         } else {
-            this.mapper[constructorName] = [ field ];
+            mapper[constructorName] = [ field ];
         }
     }
 }
 
-export default new FieldsMapper();
+export default FieldsMapper
