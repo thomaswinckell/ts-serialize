@@ -1,9 +1,9 @@
-import UnmarshallError from "../error/UnmarshallError";
-import {JsValue, Json} from "ts-json-definition";
-import {Optional, Some, Either, Right, Left} from "scalts";
-import Constructor from "../utils/Constructor";
-import Serializable from "./Serializable";
-import {isDefined} from "../utils/index";
+import UnmarshallError from "../error/UnmarshallError"
+import {JsValue, Json} from "ts-json-definition"
+import {Optional, Some, Either, Right, Left} from "scalts"
+import Constructor from "../utils/Constructor"
+import Serializable from "./Serializable"
+import {isDefined} from "../utils"
 
 
 export type Marshaller< T > = (value : T, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >) => JsValue;
@@ -52,7 +52,7 @@ export const defaultUnmarshaller : Unmarshaller< any > = (value : JsValue, json:
         }
 
         if(Serializable.prototype.isPrototypeOf(type.prototype)) {
-            return type.prototype.constructor.fromJson(value, jsonPath, classPath);
+            return type.prototype.constructor.fromJsObject(value, jsonPath, classPath);
         }
 
         const additionalMessage = `No unmarshaller found for type ${type['name']}`;

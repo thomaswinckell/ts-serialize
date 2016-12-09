@@ -1,4 +1,4 @@
-import IError from './IError';
+import IError from './IError'
 
 export default class JsonParseError implements IError {
 

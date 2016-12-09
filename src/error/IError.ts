@@ -2,5 +2,5 @@ interface IError {
     print() : void;
 }
 
-export default IError;
+export default IError
 

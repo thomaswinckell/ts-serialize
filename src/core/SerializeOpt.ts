@@ -1,9 +1,9 @@
-import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer";
-import Constructor from "../utils/Constructor";
-import {Optional, None, Some, Either, Left, Right} from "scalts";
-import {JsValue, Json} from "ts-json-definition";
-import UnmarshallError from "../error/UnmarshallError";
-import Serialize from "./Serialize";
+import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer"
+import {Constructor} from "../utils"
+import {Optional, None, Some, Either, Left, Right} from "scalts"
+import {JsValue, Json} from "ts-json-definition"
+import UnmarshallError from "../error/UnmarshallError"
+import Serialize from "./Serialize"
 
 
 function isNoneJsValue(value : any ) : boolean {

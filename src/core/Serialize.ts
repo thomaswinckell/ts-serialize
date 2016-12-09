@@ -1,8 +1,8 @@
-import {Unmarshaller, defaultMarshaller, defaultUnmarshaller, Marshaller} from "./Transformer";
-import Serializable from "./Serializable";
-import {None, Optional, Some} from "scalts";
-import FieldsMapper from './FieldsMapper';
-import {Json} from "ts-json-definition";
+import {Unmarshaller, defaultMarshaller, defaultUnmarshaller, Marshaller} from "./Transformer"
+import Serializable from "./Serializable"
+import {None, Optional, Some} from "scalts"
+import FieldsMapper from './FieldsMapper'
+import {Json} from "ts-json-definition"
 
 
 
@@ -22,12 +22,12 @@ function Serialize< T >(mbJsonPropertyName ?: string, unmarshaller : Unmarshalle
                 reflectedType = Reflect.getMetadata('design:type', target, classPropertyName);
 
                 if (reflectedType === Array) {
-                    console.error(`Please use SerializeArray instead of Serialize for Array serialization.`);
+                    console.warn(`Please use SerializeArray instead of Serialize for Array serialization.`);
                     return;
                 }
 
                 if (reflectedType === Optional) {
-                    console.error(`Please use SerializeOpt instead of Serialize for Optional serialization.`);
+                    console.warn(`Please use SerializeOpt instead of Serialize for Optional serialization.`);
                     return;
                 }
             }
@@ -48,4 +48,4 @@ function Serialize< T >(mbJsonPropertyName ?: string, unmarshaller : Unmarshalle
     }
 }
 
-export default Serialize;
+export default Serialize

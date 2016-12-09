@@ -3,4 +3,4 @@ interface Constructor< T > {
     name : string;
 }
 
-export default Constructor;
+export default Constructor

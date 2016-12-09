@@ -1,8 +1,8 @@
-import {JsValue} from "ts-json-definition";
-import {Optional, None} from "scalts";
-import Constructor from "../utils/Constructor";
+import {JsValue} from "ts-json-definition"
+import {Optional, None} from "scalts"
+import {Constructor} from "../utils"
 
-import IError from './IError';
+import IError from './IError'
 
 
 
