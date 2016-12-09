@@ -74,7 +74,7 @@ describe('ts-serialize', () => {
     };
 
     const referenceUser = new User(json._id, Some(json.name), +json.age, [ new User("son", Some("David"), 13), new User("daughter", Some("Jane"), 18) ]);
-    const mbUsersFromJson = User.fromJsArray< User >([json]);
+    const mbUsersFromJson = User.fromStringAsArray< User >(JSON.stringify([json]));
 
     mbUsersFromJson.fold< void >( errors => errors.forEach( e => e.print() ), json => console.log(json) );
 

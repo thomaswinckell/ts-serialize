@@ -31,9 +31,10 @@
     "LICENSE"
   ],
   "scripts": {
-    "preBuild": "rm -rf src/**/*.js && rm -rf src/**/*.d.ts && rm -rf test/**/*.js && rm -rf test/**/*.d.ts",
+    "clean": "rm -rf src/**/*.js && rm -rf src/**/*.d.ts && rm -rf test/**/*.js && rm -rf test/**/*.d.ts",
+    "preBuild": "npm run clean",
     "build": "tsc",
-    "test": "npm run build && mocha \"./test/**/*.js\""
+    "test": "npm run build && istanbul cover -x '**/logger.*' _mocha test/**/*.js"
   },
   "dependencies": {
     "scalts": "^0.6.0",
@@ -43,6 +44,8 @@
     "@types/lodash": "^4.14.42",
     "@types/mocha": "^2.2.33",
     "@types/power-assert": "^1.4.29",
+    "codeclimate-test-reporter": "^0.4.0",
+    "istanbul": "^0.4.5",
     "lodash": "^4.17.2",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
