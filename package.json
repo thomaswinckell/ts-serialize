@@ -31,8 +31,9 @@
     "LICENSE"
   ],
   "scripts": {
+    "preBuild": "rm -rf src/**/*.js && rm -rf src/**/*.d.ts && rm -rf test/**/*.js && rm -rf test/**/*.d.ts",
     "build": "tsc",
-    "test": "tsc && mocha \"./test/**/*.js\""
+    "test": "npm run build && mocha \"./test/**/*.js\""
   },
   "dependencies": {
     "scalts": "^0.6.0",

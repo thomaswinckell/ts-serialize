@@ -41,7 +41,7 @@ abstract class Serializable< T > {
             const unmarshallResult = (<Either< UnmarshallError[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
             if(unmarshallResult.isLeft) {
                 serializeErrors.push( ...unmarshallResult.left().get() );
-            } else if(serializeErrors.isEmpty && unmarshallResult.isRight) {
+            } else if(serializeErrors.isEmpty) {
                 entity[prop.classPropertyName] = unmarshallResult.right().get();
             }
         });
@@ -56,13 +56,13 @@ abstract class Serializable< T > {
         jsArray.forEach( ( jsObject : JsObject, index : number ) => {
 
             const newJsonPath = [ ...jsonPath, `[${index}]` ];
-            const newClassath = [ ...classPath, `[${index}]` ];
+            const newClassPath = [ ...classPath, `[${index}]` ];
 
-            const unmarshallResult = Serializable.fromJsObject< T >( jsObject, newJsonPath, newClassath );
+            const unmarshallResult = this.fromJsObject< T >( jsObject, newJsonPath, newClassPath );
 
             if(unmarshallResult.isLeft) {
                 serializeErrors.push( ...unmarshallResult.left().get() );
-            } else if(serializeErrors.isEmpty && unmarshallResult.isRight) {
+            } else if(serializeErrors.isEmpty) {
                 entities.push( unmarshallResult.right().get() );
             }
         } );

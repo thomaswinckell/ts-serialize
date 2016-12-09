@@ -74,20 +74,18 @@ describe('ts-serialize', () => {
     };
 
     const referenceUser = new User(json._id, Some(json.name), +json.age, [ new User("son", Some("David"), 13), new User("daughter", Some("Jane"), 18) ]);
-    const mbUsersFromJson = User.fromJsObject< User >(json);
+    const mbUsersFromJson = User.fromJsArray< User >([json]);
 
     mbUsersFromJson.fold< void >( errors => errors.forEach( e => e.print() ), json => console.log(json) );
 
     it('can unmarhsall Users without errors', () => {
         assert( mbUsersFromJson.isRight );
-        //assert( mbUsersFromJson.right().get().head.nonEmpty );
+        assert( mbUsersFromJson.right().get().head.nonEmpty );
     });
 
-    if(mbUsersFromJson.isLeft /*|| mbUsersFromJson.right().get().head.isEmpty*/ ) { return false; }
+    if(mbUsersFromJson.isLeft || mbUsersFromJson.right().get().head.isEmpty) { return false; }
 
-    const userFromJson = mbUsersFromJson.right().get()/*.head.get()*/;
-
-    console.log(userFromJson)
+    const userFromJson = mbUsersFromJson.right().get().head.get();
 
     it('unmarhsalling keeps the prototype', () => {
 
