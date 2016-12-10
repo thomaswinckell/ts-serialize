@@ -2,27 +2,26 @@ import * as assert      from "power-assert"
 import {isEqual}        from "lodash"
 import {Optional, Some} from "scalts"
 
-import {Serializable, Serialize, SerializeOpt} from "../src"
-import {SerializeArray} from "../src/core/SerializeArray"
+import {Serializable, Serialize, SerializeOpt, SerializeArray} from "../src"
 
 
 describe('ts-serialize', () => {
 
-    class User extends Serializable< User > {
+    class User extends Serializable {
 
-        @Serialize< string >('_id')
+        @Serialize('_id')
         public id : string;
 
-        @SerializeOpt< string >( String )
+        @SerializeOpt( String )
         public name : Optional< string >;
 
-        @Serialize< number >()
+        @Serialize()
         private age : number;
 
-        @SerializeArray< User >( User )
+        @SerializeArray( User )
         public children : User[];
 
-        @Serialize< string >()
+        @Serialize()
         public language : string;
 
         get isAdult() : boolean { return this.age > 18; }

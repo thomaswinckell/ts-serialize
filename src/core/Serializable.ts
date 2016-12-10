@@ -10,7 +10,7 @@ import IError from "../error/IError"
 import {JsObject, JsArray} from "ts-json-definition"
 
 
-abstract class Serializable< T > {
+abstract class Serializable {
 
     constructor() {}
 
