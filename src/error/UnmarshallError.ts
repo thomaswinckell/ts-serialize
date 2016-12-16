@@ -1,6 +1,5 @@
 import {JsValue} from "ts-json-definition"
 import {Optional, None} from "scalts"
-import {Constructor} from "../utils"
 
 import IError from './IError'
 
@@ -13,7 +12,7 @@ export default class UnmarshallError implements IError {
         public type : Optional< Function >,
         public jsonPropertyName : string,
         public classPropertyName : string,
-        public target : Constructor< any >,
+        public target : Function,
         public jsonPath : string[],
         public classPath : string[],
         public additionalMessage : Optional< string > = None

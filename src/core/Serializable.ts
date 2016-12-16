@@ -38,13 +38,13 @@ abstract class Serializable {
         FieldsMapper.getFieldByConstructorName(constructor.name).forEach(prop => {
             const unmarshallResult = (<Either< UnmarshallError[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
             if(unmarshallResult.isLeft) {
-                serializeErrors.push( ...unmarshallResult.left().get() );
+                serializeErrors.push(...unmarshallResult.left().get());
             } else if(serializeErrors.isEmpty) {
                 entity[prop.classPropertyName] = unmarshallResult.right().get();
             }
         });
 
-        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >( entity ) : Left< UnmarshallError[], T >( serializeErrors );
+        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >( entity ) : Left< UnmarshallError[], T >(serializeErrors);
     }
 
     static fromJsArray< T >( jsArray : JsArray, jsonPath : string[] = [], classPath : string[] = [] ) : Either< UnmarshallError[], T[] > {
@@ -53,10 +53,10 @@ abstract class Serializable {
 
         jsArray.forEach( ( jsObject : JsObject, index : number ) => {
 
-            const newJsonPath = [ ...jsonPath, `[${index}]` ];
-            const newClassPath = [ ...classPath, `[${index}]` ];
+            const newJsonPath = [...jsonPath, `[${index}]`];
+            const newClassPath = [...classPath, `[${index}]`];
 
-            const unmarshallResult = this.fromJsObject< T >( jsObject, newJsonPath, newClassPath );
+            const unmarshallResult = this.fromJsObject< T >(jsObject, newJsonPath, newClassPath);
 
             if(unmarshallResult.isLeft) {
                 serializeErrors.push( ...unmarshallResult.left().get() );
@@ -65,7 +65,7 @@ abstract class Serializable {
             }
         } );
 
-        return serializeErrors.isEmpty ? Right< UnmarshallError[], T[] >( entities ) : Left< UnmarshallError[], T[] >( serializeErrors );
+        return serializeErrors.isEmpty ? Right< UnmarshallError[], T[] >(entities) : Left< UnmarshallError[], T[] >(serializeErrors);
     }
 
     toJson() : JsObject {

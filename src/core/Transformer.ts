@@ -1,18 +1,17 @@
 import UnmarshallError from "../error/UnmarshallError"
 import {JsValue, Json} from "ts-json-definition"
 import {Optional, Some, Either, Right, Left} from "scalts"
-import Constructor from "../utils/Constructor"
 import Serializable from "./Serializable"
 import {isDefined} from "../utils"
 
 
-export type Marshaller< T > = (value : T, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >) => JsValue;
+export type Marshaller< T > = (value : T, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function >) => JsValue;
 
-export type Unmarshaller< T > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => Either< UnmarshallError[], T >;
+export type Unmarshaller< T > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => Either< UnmarshallError[], T >;
 
 
 
-export const defaultMarshaller : Marshaller< any > = ( value : any, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function > ) : JsValue => {
+export const defaultMarshaller : Marshaller< any > = ( value : any, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function > ) : JsValue => {
 
     const undefinedValue = null;
 
@@ -31,7 +30,7 @@ export const defaultMarshaller : Marshaller< any > = ( value : any, json: Json, 
 };
 
 
-export const defaultUnmarshaller : Unmarshaller< any > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
+export const defaultUnmarshaller : Unmarshaller< any > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
 
     // if the value is not define and there is a default value
     if(!isDefined(value) && isDefined(clazz[classPropertyName])) {
@@ -60,7 +59,7 @@ export const defaultUnmarshaller : Unmarshaller< any > = (value : JsValue, json:
 
 
 
-const stringUnmarshaller : Unmarshaller< string > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
+const stringUnmarshaller : Unmarshaller< string > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
     if( typeof value === 'string' ) {
         return Right< UnmarshallError[], string >(value);
     }
@@ -68,7 +67,7 @@ const stringUnmarshaller : Unmarshaller< string > = (value : JsValue, json: Json
  };
 
 
-const numberUnmarshaller : Unmarshaller< number >  = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
+const numberUnmarshaller : Unmarshaller< number >  = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Function, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
     if( typeof value === 'number' ) {
         return Right< UnmarshallError[],number >(value);
     }
