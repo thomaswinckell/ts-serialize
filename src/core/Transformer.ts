@@ -33,13 +33,10 @@ export const defaultMarshaller : Marshaller< any > = ( value : any, json: Json, 
 
 export const defaultUnmarshaller : Unmarshaller< any > = (value : JsValue, json: Json, clazz : any, classPropertyName : string, jsonPropertyName : string, target : Constructor< any >, mbType : Optional< Function >, jsonPath : string[], classPath : string[]) => {
 
-    const args = [ value, json, clazz, classPropertyName, jsonPropertyName, target, mbType, jsonPath, classPath ];
-
     // if the value is not define and there is a default value
     if(!isDefined(value) && isDefined(clazz[classPropertyName])) {
         return Right< UnmarshallError[],any >(clazz[classPropertyName]);
     }
-
 
     return mbType.fold(Right< UnmarshallError[], any >(value), (type : Function) => {
 

@@ -12,8 +12,6 @@ import {JsObject, JsArray} from "ts-json-definition"
 
 abstract class Serializable {
 
-    constructor() {}
-
     static fromString< T >( str : string ) : Either< IError[], T > {
         try {
             const json = JSON.parse( str );
