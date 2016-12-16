@@ -1,11 +1,12 @@
 import {JsValue} from "ts-json-definition"
 import {Optional, None} from "scalts"
 
-import IError from './IError'
 
 
+export default class UnmarshallError implements Error {
 
-export default class UnmarshallError implements IError {
+    public message : string;
+    public name : string = 'UnmarshallError';
 
     constructor(
         public value : JsValue,
@@ -16,15 +17,10 @@ export default class UnmarshallError implements IError {
         public jsonPath : string[],
         public classPath : string[],
         public additionalMessage : Optional< string > = None
-    ) {}
-
-    get baseMessage() : string {
-        const jsonPath = this.jsonPath.concat(this.jsonPropertyName).join('.');
-        const classPath = this.classPath.concat(this.classPropertyName).join('.');
-        return `An error occured while serializing value '${jsonPath}.${this.value}' into property [${this.target.constructor['name']}].${classPath} : ${this.type.fold('UnknownType', t => t['name'])}`;
-    }
-
-    print() : void {
-        console.error(`${this.baseMessage}\n${this.additionalMessage.getOrElse('')}`);
+    ) {
+        const strJsonPath = jsonPath.concat(jsonPropertyName).join('.');
+        const strClassPath = classPath.concat(classPropertyName).join('.');
+        const baseMessage = `An error occured while serializing value '${strJsonPath}.${value}' into property [${target.constructor['name']}].${strClassPath} : ${type.fold('UnknownType', t => t['name'])}`;
+        this.message = `${baseMessage}\n${additionalMessage.getOrElse('')}`;
     }
 }

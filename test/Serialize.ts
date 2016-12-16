@@ -115,7 +115,7 @@ describe('ts-serialize', () => {
     const referenceUser = new User(json._id, Some(json.name), +json.age, new Role("123456"), [ new User("son", Some("David"), 13, new Role("123456")), new User("daughter", Some("Jane"), 18, new Role("123456")) ]);
     const mbUsersFromJson = User.fromStringAsArray< User >(JSON.stringify([json]));
 
-    mbUsersFromJson.fold< void >( errors => errors.forEach( e => e.print() ), json => console.log(json) );
+    mbUsersFromJson.fold< void >( errors => errors.forEach( e => console.error(e) ), json => console.log(json) );
 
     it('can unmarhsall Users without errors', () => {
         assert( mbUsersFromJson.isRight );

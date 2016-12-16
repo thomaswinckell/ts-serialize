@@ -6,27 +6,26 @@ import UnmarshallError from "../error/UnmarshallError"
 import Constructor from "../utils/Constructor"
 
 import FieldsMapper from "./FieldsMapper"
-import IError from "../error/IError"
 import {JsObject, JsArray} from "ts-json-definition"
 
 
 abstract class Serializable {
 
-    static fromString< T >(str: string): Either< IError[], T > {
+    static fromString< T >(str: string): Either< Error[], T > {
         try {
             const json = JSON.parse(str);
             return this.fromJsObject< T >(json);
         } catch (e) {
-            return Left< IError[], T >([new JsonParseError(str)]);
+            return Left< Error[], T >([new JsonParseError(str)]);
         }
     }
 
-    static fromStringAsArray< T >(str: string): Either< IError[], Array< T > > {
+    static fromStringAsArray< T >(str: string): Either< Error[], Array< T > > {
         try {
             const json = JSON.parse(str);
             return this.fromJsArray< T >(json);
         } catch (e) {
-            return Left< IError[], Array< T > >([new JsonParseError(str)]);
+            return Left< Error[], Array< T > >([new JsonParseError(str)]);
         }
     }
 

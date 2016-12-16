@@ -1,5 +1,5 @@
 interface Constructor< T > {
-    new() : T;
+    new(...args : any[]) : T;
     name : string;
 }
 
