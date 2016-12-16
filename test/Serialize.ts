@@ -1,11 +1,26 @@
 import * as assert      from "power-assert"
 import {isEqual}        from "lodash"
-import {Optional, Some} from "scalts"
+import {Optional, Some, None} from "scalts"
 
 import {Serializable, Serialize, SerializeOpt, SerializeArray} from "../src"
 
 
 describe('ts-serialize', () => {
+
+    class Role extends Serializable {
+
+        @Serialize()
+        public id : string;
+
+        @SerializeOpt( String )
+        public name : Optional< string >;
+
+        constructor(id : string, name : Optional< string > = None) {
+            super();
+            this.id = id;
+            this.name = name;
+        }
+    }
 
     class User extends Serializable {
 
@@ -22,15 +37,19 @@ describe('ts-serialize', () => {
         public children : User[];
 
         @Serialize()
+        public role : Role;
+
+        @Serialize()
         public language : string;
 
         get isAdult() : boolean { return this.age > 18; }
 
-        constructor(id : string, name : Optional< string >, age : number, children : Array< User > = [], language : string = 'english') {
+        constructor(id : string, name : Optional< string >, age : number, role : Role, children : Array< User > = [], language : string = 'english') {
             super();
             this.id = id;
             this.name = name;
             this.age = age;
+            this.role = role;
             this.children = children;
             this.language = language;
         }
@@ -45,11 +64,20 @@ describe('ts-serialize', () => {
             _id   : 'son',
             name  : 'David',
             age   : 13,
+            role: {
+                id: '123456'
+            },
         }, {
             _id   : 'daughter',
             name  : 'Jane',
             age   : 18,
+            role: {
+                id: '123456'
+            },
         }],
+        role: {
+            id: '123456'
+        },
     };
 
     const cleanJson = {
@@ -62,17 +90,29 @@ describe('ts-serialize', () => {
              name  : 'David',
              age   : 13,
              language : 'english',
-             children : []
+             children : [],
+             role: {
+                id: '123456',
+                name : null
+             },
         }, {
              _id   : 'daughter',
              name  : 'Jane',
              age   : 18,
              language : 'english',
-             children : []
+             children : [],
+             role: {
+                id: '123456',
+                name : null
+             },
         }],
+        role: {
+            id: '123456',
+            name : null
+        },
     };
 
-    const referenceUser = new User(json._id, Some(json.name), +json.age, [ new User("son", Some("David"), 13), new User("daughter", Some("Jane"), 18) ]);
+    const referenceUser = new User(json._id, Some(json.name), +json.age, new Role("123456"), [ new User("son", Some("David"), 13, new Role("123456")), new User("daughter", Some("Jane"), 18, new Role("123456")) ]);
     const mbUsersFromJson = User.fromStringAsArray< User >(JSON.stringify([json]));
 
     mbUsersFromJson.fold< void >( errors => errors.forEach( e => e.print() ), json => console.log(json) );
@@ -85,6 +125,7 @@ describe('ts-serialize', () => {
     if(mbUsersFromJson.isLeft || mbUsersFromJson.right().get().head.isEmpty) { return false; }
 
     const userFromJson = mbUsersFromJson.right().get().head.get();
+    const roleFromJson = userFromJson.role;
 
     it('unmarhsalling keeps the prototype', () => {
 
@@ -93,6 +134,12 @@ describe('ts-serialize', () => {
 
         assert( Serializable.prototype.isPrototypeOf( userFromJson ) );
         assert( userFromJson instanceof Serializable );
+
+        assert( Role.prototype.isPrototypeOf( roleFromJson ) );
+        assert( roleFromJson instanceof Role );
+
+        assert( Serializable.prototype.isPrototypeOf( roleFromJson ) );
+        assert( roleFromJson instanceof Serializable );
     });
 
     it('unmarhsalling keeps the computed properties', () => {
