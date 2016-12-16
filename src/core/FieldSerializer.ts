@@ -1,4 +1,4 @@
-import UnmarshallError from "../error/UnmarshallError"
+import UnmarshallError from "../errors/UnmarshallError"
 import {Either} from "scalts"
 import {Json} from "ts-json-definition"
 

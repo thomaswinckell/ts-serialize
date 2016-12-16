@@ -1,7 +1,8 @@
-import UnmarshallError from "../error/UnmarshallError"
 import {JsValue, Json} from "ts-json-definition"
 import {Optional, Some, Either, Right, Left} from "scalts"
-import Serializable from "./Serializable"
+
+import UnmarshallError from "../errors/UnmarshallError"
+import Serializable from "../core/Serializable"
 import {isDefined} from "../utils"
 
 

@@ -1,12 +1,12 @@
 import 'reflect-metadata'
-
 import {Either, Right, Left} from "scalts"
-import JsonParseError from "../error/JsonParseError"
-import UnmarshallError from "../error/UnmarshallError"
-import Constructor from "../utils/Constructor"
-
-import FieldsMapper from "./FieldsMapper"
 import {JsObject, JsArray} from "ts-json-definition"
+
+import JsonParseError from "../errors/JsonParseError"
+import UnmarshallError from "../errors/UnmarshallError"
+import Constructor from "../utils/Constructor"
+import FieldsMapper from "./FieldsMapper"
+
 
 
 abstract class Serializable {

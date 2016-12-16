@@ -1,7 +1,8 @@
-import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "./Transformer"
 import {Optional, None, Some, Either, Left, Right} from "scalts"
 import {JsValue, Json} from "ts-json-definition"
-import UnmarshallError from "../error/UnmarshallError"
+
+import {Unmarshaller, defaultUnmarshaller, Marshaller, defaultMarshaller} from "../transformers"
+import UnmarshallError from "../errors/UnmarshallError"
 import Serialize from "./Serialize"
 
 
