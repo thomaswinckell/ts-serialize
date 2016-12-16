@@ -12,63 +12,63 @@ import {JsObject, JsArray} from "ts-json-definition"
 
 abstract class Serializable {
 
-    static fromString< T >( str : string ) : Either< IError[], T > {
+    static fromString< T >(str: string): Either< IError[], T > {
         try {
-            const json = JSON.parse( str );
-            return this.fromJsObject< T >( json );
+            const json = JSON.parse(str);
+            return this.fromJsObject< T >(json);
         } catch (e) {
-            return Left< IError[], T >( [ new JsonParseError( str ) ] );
+            return Left< IError[], T >([new JsonParseError(str)]);
         }
     }
 
-    static fromStringAsArray< T >( str : string ) : Either< IError[], Array< T > > {
+    static fromStringAsArray< T >(str: string): Either< IError[], Array< T > > {
         try {
-            const json = JSON.parse( str );
-            return this.fromJsArray< T >( json );
+            const json = JSON.parse(str);
+            return this.fromJsArray< T >(json);
         } catch (e) {
-            return Left< IError[], Array< T > >( [ new JsonParseError( str ) ] );
+            return Left< IError[], Array< T > >([new JsonParseError(str)]);
         }
     }
 
-    static fromJsObject< T >( jsObject : JsObject, jsonPath : string[] = [], classPath : string[] = [] ) : Either< UnmarshallError[], T > {
+    static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T > {
         const constructor = (< Constructor< T > >this.prototype.constructor);
         let entity = new constructor();
-        let serializeErrors : UnmarshallError[] = [];
+        let serializeErrors: UnmarshallError[] = [];
 
         FieldsMapper.getFieldByConstructorName(constructor.name).forEach(prop => {
             const unmarshallResult = (<Either< UnmarshallError[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
-            if(unmarshallResult.isLeft) {
+            if (unmarshallResult.isLeft) {
                 serializeErrors.push(...unmarshallResult.left().get());
-            } else if(serializeErrors.isEmpty) {
+            } else if (serializeErrors.isEmpty) {
                 entity[prop.classPropertyName] = unmarshallResult.right().get();
             }
         });
 
-        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >( entity ) : Left< UnmarshallError[], T >(serializeErrors);
+        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >(entity) : Left< UnmarshallError[], T >(serializeErrors);
     }
 
-    static fromJsArray< T >( jsArray : JsArray, jsonPath : string[] = [], classPath : string[] = [] ) : Either< UnmarshallError[], T[] > {
-        let entities : T[] = [];
-        let serializeErrors : UnmarshallError[] = [];
+    static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T[] > {
+        let entities: T[] = [];
+        let serializeErrors: UnmarshallError[] = [];
 
-        jsArray.forEach( ( jsObject : JsObject, index : number ) => {
+        jsArray.forEach((jsObject: JsObject, index: number) => {
 
             const newJsonPath = [...jsonPath, `[${index}]`];
             const newClassPath = [...classPath, `[${index}]`];
 
             const unmarshallResult = this.fromJsObject< T >(jsObject, newJsonPath, newClassPath);
 
-            if(unmarshallResult.isLeft) {
-                serializeErrors.push( ...unmarshallResult.left().get() );
-            } else if(serializeErrors.isEmpty) {
-                entities.push( unmarshallResult.right().get() );
+            if (unmarshallResult.isLeft) {
+                serializeErrors.push(...unmarshallResult.left().get());
+            } else if (serializeErrors.isEmpty) {
+                entities.push(unmarshallResult.right().get());
             }
-        } );
+        });
 
         return serializeErrors.isEmpty ? Right< UnmarshallError[], T[] >(entities) : Left< UnmarshallError[], T[] >(serializeErrors);
     }
 
-    toJson() : JsObject {
+    toJson(): JsObject {
         let obj = {};
         FieldsMapper.getFieldByConstructorName(this.constructor['name']).forEach(prop => {
             obj[prop.jsonPropertyName] = prop.marshaller(this[prop.classPropertyName], obj, this);
@@ -76,8 +76,8 @@ abstract class Serializable {
         return obj;
     }
 
-    toString( tabLength : number = 4 ) : string {
-        return JSON.stringify( this, null, tabLength );
+    toString(tabLength: number = 4): string {
+        return JSON.stringify(this, null, tabLength);
     }
 }
 
