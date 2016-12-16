@@ -5,25 +5,18 @@ import UnmarshallError from "../error/UnmarshallError"
 import Serialize from "./Serialize"
 
 
-function isNoneJsValue(value: any): boolean {
-    return value === undefined || value === null;
-}
-
 const NoneJsValue = null;
 
 
 const SerializeOpt = function< T >(type: Function, jsonPropertyName ?: string, unmarshaller: Unmarshaller< T > = defaultUnmarshaller, marshaller: Marshaller< T > = defaultMarshaller) {
-    const optUnmarshaller: Unmarshaller< Optional< T > > = (value: JsValue, json: Json, clazz: any, jsonPropertyName: string, classPropertyName: string, target: Function, mbType: Optional< Function >, jsonPath: string[], classPath: string[]): Either< UnmarshallError[], Optional< T > > => {
-
-        if (isNoneJsValue(value)) {
-            return Right< UnmarshallError[], Optional< T > >(None);
-        }
-
-        return unmarshaller(value, json, clazz, jsonPropertyName, classPropertyName, target, mbType, jsonPath, classPath)
-            .fold(
-                e => Left< UnmarshallError[], Optional< T > >(e),
-                v => Right< UnmarshallError[], Optional< T > >(Some< T >(v))
-            );
+    const optUnmarshaller: Unmarshaller< Optional< T > > = (jsValue: JsValue, json: Json, clazz: any, jsonPropertyName: string, classPropertyName: string, target: Function, mbType: Optional< Function >, jsonPath: string[], classPath: string[]): Either< UnmarshallError[], Optional< T > > => {
+        return Optional.apply(jsValue).fold(Right< UnmarshallError[], Optional< T > >(None), value => {
+            return unmarshaller(value, json, clazz, jsonPropertyName, classPropertyName, target, mbType, jsonPath, classPath)
+                .fold(
+                    e => Left< UnmarshallError[], Optional< T > >(e),
+                    v => Right< UnmarshallError[], Optional< T > >(Some< T >(v))
+                );
+        });
     };
 
     const optMarshaller: Marshaller< Optional< T > > = (value: Optional< T >, json: Json, clazz: any, jsonPropertyName: string, classPropertyName: string, target: Function, mbType: Optional< Function >) => {
