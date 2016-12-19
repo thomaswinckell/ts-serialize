@@ -4,7 +4,7 @@ import {JsObject, JsArray} from "ts-json-definition"
 
 import UnmarshallError from "../errors/UnmarshallError"
 import Constructor from "../utils/Constructor"
-import SeriliazersMapper from "./SeriliazersMapper"
+import SerializersMapper from "./SerializersMapper"
 
 
 abstract class Serializable {
@@ -27,12 +27,12 @@ abstract class Serializable {
         }
     }
 
-    static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T > {
+    static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T > {
         let entity = new (< Constructor< T > >this.prototype.constructor)();
-        let serializeErrors: UnmarshallError[] = [];
+        let serializeErrors: Error[] = [];
 
-        SeriliazersMapper.getFieldSerializers(this.prototype).forEach(prop => {
-            const unmarshallResult = (<Either< UnmarshallError[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
+        SerializersMapper.getFieldSerializers(this.prototype).forEach(prop => {
+            const unmarshallResult = (<Either< Error[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
             if (unmarshallResult.isLeft) {
                 serializeErrors.push(...unmarshallResult.left().get());
             } else if (serializeErrors.isEmpty) {
@@ -40,12 +40,12 @@ abstract class Serializable {
             }
         });
 
-        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >(entity) : Left< UnmarshallError[], T >(serializeErrors);
+        return serializeErrors.isEmpty ? Right< UnmarshallError[], T >(entity) : Left< Error[], T >(serializeErrors);
     }
 
-    static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T[] > {
+    static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T[] > {
         let entities: T[] = [];
-        let serializeErrors: UnmarshallError[] = [];
+        let serializeErrors: Error[] = [];
 
         jsArray.forEach((jsObject: JsObject, index: number) => {
 
@@ -61,12 +61,12 @@ abstract class Serializable {
             }
         });
 
-        return serializeErrors.isEmpty ? Right< UnmarshallError[], T[] >(entities) : Left< UnmarshallError[], T[] >(serializeErrors);
+        return serializeErrors.isEmpty ? Right< UnmarshallError[], T[] >(entities) : Left< Error[], T[] >(serializeErrors);
     }
 
     toJson(): JsObject {
         let obj = {};
-        SeriliazersMapper.getFieldSerializers(this.constructor.prototype).forEach(prop => {
+        SerializersMapper.getFieldSerializers(this.constructor.prototype).forEach(prop => {
             obj[prop.jsonPropertyName] = prop.marshaller(this[prop.classPropertyName], obj, this);
         });
         return obj;

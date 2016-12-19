@@ -2,7 +2,7 @@
 
 ##ts-serialize
 
-Serialization tool using Typescript decorators and reflect-metadata
+Serialization tool using Typescript decorators and reflect-metadata.
 
 ###Usage
 
@@ -55,7 +55,7 @@ class User extends Serializable {
 }
 ```
 
-Now, validate you json using one of those and get either errors, your serialized object
+Now, validate you json using one of those and get either errors or your serialized object/array
 
 
 ```
@@ -63,9 +63,9 @@ static fromString< T >(str: string): Either< Error[], T >;
  
 static fromStringAsArray< T >(str: string): Either< Error[], Array< T > >;
  
-static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T >;
+static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T >;
  
-static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T[] >;
+static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T[] >;
 ```
 
 And convert your instances to json using :

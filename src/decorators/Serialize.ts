@@ -4,7 +4,7 @@ import {None, Optional, Some} from "scalts"
 
 import {Unmarshaller, defaultMarshaller, defaultUnmarshaller, Marshaller} from "../transformers"
 import Serializable from "../core/Serializable"
-import SeriliazersMapper from "../core/SeriliazersMapper"
+import SerializersMapper from "../core/SerializersMapper"
 
 
 function Serialize< T >(mbJsonPropertyName ?: string, unmarshaller: Unmarshaller< T > = defaultUnmarshaller, marshaller: Marshaller< T > = defaultMarshaller, mbGivenType: Optional< any > = None) {
@@ -39,7 +39,7 @@ function Serialize< T >(mbJsonPropertyName ?: string, unmarshaller: Unmarshaller
         const mbReflectedType = reflectedType ? Some(reflectedType) : None;
         const mbType = mbGivenType.isEmpty ? mbReflectedType : mbGivenType;
 
-        SeriliazersMapper.registerField(target, {
+        SerializersMapper.registerField(target, {
             unmarshaller: (value: any, json: Json, clazz: any, jsonPath: string[], classPath: string[]) => unmarshaller(value, json, clazz, jsonPropertyName, classPropertyName, target, mbType, jsonPath, classPath),
             marshaller: (value: any, json: Json, clazz: any) => marshaller(value, json, clazz, jsonPropertyName, classPropertyName, target, mbType),
             classPropertyName,
