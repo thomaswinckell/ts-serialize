@@ -1,6 +1,6 @@
 {
   "name": "ts-serialize",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "Serialization using Typescript decorators",
   "keywords": [
     "typescript",
@@ -37,6 +37,7 @@
     "test": "npm run build && istanbul cover -x '**/logger.*' _mocha test/**/*.js"
   },
   "dependencies": {
+    "reflect-metadata": "^0.1.8",
     "scalts": "^0.6.0",
     "scalts-array": "^0.2.0",
     "ts-json-definition": "^0.0.1"
