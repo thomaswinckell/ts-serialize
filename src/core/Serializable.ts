@@ -2,11 +2,9 @@ import 'reflect-metadata'
 import {Either, Right, Left} from "scalts"
 import {JsObject, JsArray} from "ts-json-definition"
 
-import JsonParseError from "../errors/JsonParseError"
 import UnmarshallError from "../errors/UnmarshallError"
 import Constructor from "../utils/Constructor"
-import FieldsMapper from "./FieldsMapper"
-
+import SeriliazersMapper from "./SeriliazersMapper"
 
 
 abstract class Serializable {
@@ -16,7 +14,7 @@ abstract class Serializable {
             const json = JSON.parse(str);
             return this.fromJsObject< T >(json);
         } catch (e) {
-            return Left< Error[], T >([new JsonParseError(str)]);
+            return Left< Error[], T >(e);
         }
     }
 
@@ -25,16 +23,15 @@ abstract class Serializable {
             const json = JSON.parse(str);
             return this.fromJsArray< T >(json);
         } catch (e) {
-            return Left< Error[], Array< T > >([new JsonParseError(str)]);
+            return Left< Error[], Array< T > >(e);
         }
     }
 
     static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< UnmarshallError[], T > {
-        const constructor = (< Constructor< T > >this.prototype.constructor);
-        let entity = new constructor();
+        let entity = new (< Constructor< T > >this.prototype.constructor)();
         let serializeErrors: UnmarshallError[] = [];
 
-        FieldsMapper.getFieldByConstructorName(constructor.name).forEach(prop => {
+        SeriliazersMapper.getFieldSerializers(this.prototype).forEach(prop => {
             const unmarshallResult = (<Either< UnmarshallError[], any >>prop.unmarshaller(jsObject[prop.jsonPropertyName], jsObject, entity, jsonPath, classPath));
             if (unmarshallResult.isLeft) {
                 serializeErrors.push(...unmarshallResult.left().get());
@@ -69,7 +66,7 @@ abstract class Serializable {
 
     toJson(): JsObject {
         let obj = {};
-        FieldsMapper.getFieldByConstructorName(this.constructor['name']).forEach(prop => {
+        SeriliazersMapper.getFieldSerializers(this.constructor.prototype).forEach(prop => {
             obj[prop.jsonPropertyName] = prop.marshaller(this[prop.classPropertyName], obj, this);
         });
         return obj;
