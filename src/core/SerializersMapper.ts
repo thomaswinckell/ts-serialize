@@ -1,18 +1,20 @@
 import FieldSerializer from "./FieldSerializer"
 
 
+const metadataKey = "design:serializers";
+
 namespace SerializersMapper {
 
     export function getFieldSerializers(target: Object): FieldSerializer[] {
-        return Reflect.getMetadata("design:serializers", target) || [];
+        return Reflect.getMetadata(metadataKey, target) || [];
     }
 
     export function registerField(target: Object, field: FieldSerializer): void {
         const currentMetadata = getFieldSerializers(target);
         if (currentMetadata) {
-            Reflect.defineMetadata("design:serializers", [...currentMetadata, field], target);
+            Reflect.defineMetadata(metadataKey, [...currentMetadata, field], target);
         } else {
-            Reflect.defineMetadata("design:serializers", [field], target);
+            Reflect.defineMetadata(metadataKey, [field], target);
         }
     }
 }
