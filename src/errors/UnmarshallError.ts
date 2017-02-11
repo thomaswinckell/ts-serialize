@@ -21,6 +21,6 @@ export default class UnmarshallError implements Error {
         const strJsonPath = jsonPath.concat(jsonPropertyName).join('.');
         const strClassPath = classPath.concat(classPropertyName).join('.');
         const baseMessage = `An error occured while serializing value '${strJsonPath}.${value}' into property [${target.constructor['name']}].${strClassPath} : ${type.fold('UnknownType', t => t['name'])}`;
-        this.message = `${baseMessage}\n${additionalMessage.getOrElse('')}`;
+        this.message = `${baseMessage}\n${additionalMessage.getOrElse(() => '')}`;
     }
 }

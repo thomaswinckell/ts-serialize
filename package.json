@@ -37,21 +37,21 @@
     "test": "npm run build && istanbul cover -x '**/logger.*' _mocha test/**/*.js"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.8",
-    "scalts": "^0.6.0",
-    "scalts-array": "^0.2.0",
-    "ts-json-definition": "^0.0.1"
+    "reflect-metadata": "^0.1.9",
+    "scalts": "^1.0.1",
+    "scalts-array": "^0.4.0",
+    "ts-json-definition": "^0.0.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.42",
-    "@types/mocha": "^2.2.33",
+    "@types/lodash": "^4.14.52",
+    "@types/mocha": "^2.2.39",
     "@types/power-assert": "^1.4.29",
     "codeclimate-test-reporter": "^0.4.0",
     "istanbul": "^0.4.5",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
-    "typescript": "^2.1.4",
-    "typings": "^2.0.0"
+    "typescript": "^2.1.6",
+    "typings": "^2.1.0"
   }
 }
