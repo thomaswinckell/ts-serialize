@@ -37,7 +37,7 @@ export const defaultUnmarshaller: Unmarshaller< any > = (value: JsValue, json: J
         return Right< UnmarshallError[],any >(clazz[classPropertyName]);
     }
 
-    return mbType.fold(Right< UnmarshallError[], any >(value), (type: Function) => {
+    return mbType.fold(() => Right< UnmarshallError[], any >(value), (type: Function) => {
 
         if (type === String) {
             return stringUnmarshaller(value, json, clazz, classPropertyName, jsonPropertyName, target, mbType, jsonPath, classPath);
