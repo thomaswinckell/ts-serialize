@@ -1,6 +1,6 @@
 {
   "name": "ts-serialize",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Serialization using Typescript decorators and metadata reflection",
   "keywords": [
     "typescript",
