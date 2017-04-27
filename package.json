@@ -36,10 +36,10 @@
     "build": "tsc",
     "test": "npm run build && istanbul cover -x '**/logger.*' _mocha test/**/*.js"
   },
-  "dependencies": {
-    "scalts": "^1.1.0",
-    "scalts-array": "^0.7.0",
-    "ts-json-definition": "^0.0.2"
+  "peerDependencies": {
+    "scalts": "1.1.*",
+    "scalts-array": "0.7.*",
+    "ts-json-definition": "0.0.*"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.63",
@@ -50,6 +50,9 @@
     "lodash": "^4.17.4",
     "mocha": "^3.3.0",
     "power-assert": "^1.4.2",
+    "scalts": "^1.1.0",
+    "scalts-array": "^0.7.0",
+    "ts-json-definition": "^0.0.2",
     "typescript": "^2.3.1",
     "typings": "^2.1.1"
   }
