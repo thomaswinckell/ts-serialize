@@ -157,4 +157,15 @@ describe('ts-serialize', () => {
     it('marhsalling don\'t loose and don\'t take too much data', () => {
         assert( isEqual( userFromJson.toJson(), cleanJson ) );
     });
+
+    it('UnmarshallError toString', () => {
+
+        const errors = [
+            'An error occurred while serializing value undefined into property [0].User._id of type String.\n\tThe value is not defined.',
+            'An error occurred while serializing value undefined into property [0].User.age of type Number.\n\tThe value is not defined.',
+            'An error occurred while serializing value undefined into property [0].User.role of type Role.\n\tThe value is not defined.'
+        ].join('\n');
+
+        assert.equal(User.fromStringAsArray<User>("[{}]").left().get().map(t => t.toString()).join('\n'), errors);
+    });
 });

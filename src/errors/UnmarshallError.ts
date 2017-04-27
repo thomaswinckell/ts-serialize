@@ -5,7 +5,6 @@ import {Optional, None} from "scalts"
 
 export default class UnmarshallError implements Error {
 
-    public message : string;
     public name : string = 'UnmarshallError';
 
     constructor(
@@ -17,10 +16,15 @@ export default class UnmarshallError implements Error {
         public jsonPath : string[],
         public classPath : string[],
         public additionalMessage : Optional< string > = None
-    ) {
-        const strJsonPath = jsonPath.concat(jsonPropertyName).join('.');
-        const strClassPath = classPath.concat(classPropertyName).join('.');
-        const baseMessage = `An error occured while serializing value '${strJsonPath}.${value}' into property [${target.constructor['name']}].${strClassPath} : ${type.fold(() => 'UnknownType', t => t['name'])}`;
-        this.message = `${baseMessage}\n${additionalMessage.getOrElse(() => '')}`;
+    ) {}
+
+    get message() {
+        const strClassPath = `${this.classPath.join('.')}.${this.target.constructor['name']}.${this.classPropertyName}`;
+        const baseMessage = `An error occurred while serializing value ${this.value} into property ${strClassPath} of type ${this.type.fold(() => 'unknown', t => t['name'])}.`;
+        return `${baseMessage}${this.additionalMessage.map(m => `\n\t${m}`).getOrElse(() => '')}`;
+    }
+
+    toString() {
+        return this.message;
     }
 }
