@@ -37,7 +37,6 @@
     "test": "npm run build && istanbul cover -x '**/logger.*' _mocha test/**/*.js"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.10",
     "scalts": "^1.1.0",
     "scalts-array": "^0.7.0",
     "ts-json-definition": "^0.0.2"
