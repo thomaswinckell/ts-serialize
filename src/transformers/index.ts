@@ -32,6 +32,7 @@ export const defaultMarshaller: Marshaller< any > = (value: any, json: Json, cla
 
 export const defaultUnmarshaller: Unmarshaller< any > = (value: JsValue, json: Json, clazz: any, classPropertyName: string, jsonPropertyName: string, target: Function, mbType: Optional< Function >, jsonPath: string[], classPath: string[]) => {
 
+
     // if the value is not define
     if (!isDefined(value)) {
 
@@ -58,6 +59,10 @@ export const defaultUnmarshaller: Unmarshaller< any > = (value: JsValue, json: J
             return type.prototype.constructor.fromJsObject(value, jsonPath, classPath);
         }
 
+        if (type === Object) {
+            return objectUnmarshaller(value, json, clazz, classPropertyName, jsonPropertyName, target, mbType, jsonPath, classPath);
+        }
+
         const additionalMessage = `No unmarshaller found for type ${type['name']}`;
         return Left< UnmarshallError[], number >([new UnmarshallError(value, Some(type), jsonPropertyName, classPropertyName, target, jsonPath, classPath, Some(additionalMessage))]);
     });
@@ -82,4 +87,12 @@ const numberUnmarshaller: Unmarshaller< number > = (value: JsValue, json: Json, 
     }
     const additionalErrorMessage = Some("The value is not a number value.");
     return Left< UnmarshallError[], number >([new UnmarshallError(value, Some(Number), jsonPropertyName, classPropertyName, target, jsonPath, classPath, additionalErrorMessage)]);
+};
+
+const objectUnmarshaller: Unmarshaller< object > = (value: JsValue, json: Json, clazz: any, classPropertyName: string, jsonPropertyName: string, target: Function, mbType: Optional< Function >, jsonPath: string[], classPath: string[]) => {
+    if (typeof value === 'object') {
+        return Right< UnmarshallError[], object >(value as object);
+    }
+    const additionalErrorMessage = Some("The value is not an object.");
+    return Left< UnmarshallError[], object >([new UnmarshallError(value, Some(Object), jsonPropertyName, classPropertyName, target, jsonPath, classPath, additionalErrorMessage)]);
 };
