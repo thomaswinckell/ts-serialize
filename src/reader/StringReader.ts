@@ -1,5 +1,5 @@
 import {JsValue} from "ts-json-definition";
-import Reader from "../Reader";
+import Reader from "./Reader";
 import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
 
 
