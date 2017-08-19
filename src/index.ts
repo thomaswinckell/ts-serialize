@@ -1,9 +1,9 @@
-import "scalts-array"
+import * as Writers from './writer';
+import * as Readers from './reader';
 
-export { default as Serializable } from "./core/Serializable"
-export { default as Serialize } from "./decorators/Serialize"
-export { default as SerializeOpt } from "./decorators/SerializeOpt"
-export { default as SerializeArray } from "./decorators/SerializeArray"
 
-export { default as UnmarshallError } from './errors/UnmarshallError'
+export {default as Serializable} from './model/Serializable';
+export {default as Serialize} from './core/Serialize';
 
+export {Writers as Writers};
+export {Readers as Readers};
