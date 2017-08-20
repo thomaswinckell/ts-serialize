@@ -3,9 +3,9 @@ import Reader from "./Reader";
 import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
 
 
-const numberReader: Reader<Number> = function(value: JsValue) {
+const booleanReader: Reader<Boolean> = function(value: JsValue) {
     return new Promise((resolve, reject) => {
-        if(typeof value === 'number' && !Number.isNaN(value)) {
+        if(typeof value === 'boolean') {
             resolve(value)
         } else {
             reject(`The value is not a number value.`)
@@ -14,6 +14,6 @@ const numberReader: Reader<Number> = function(value: JsValue) {
 };
 
 
-ReaderWriterRegistry.registerDefaultReader(numberReader, [Number]);
+ReaderWriterRegistry.registerDefaultReader(booleanReader, [Boolean]);
 
-export default numberReader;
+export default booleanReader;

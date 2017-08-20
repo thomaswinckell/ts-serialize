@@ -8,5 +8,6 @@ const defaultWriter: Writer<any> = function(value: any) {
 
 ReaderWriterRegistry.registerDefaultWriter(defaultWriter, [String]);
 ReaderWriterRegistry.registerDefaultWriter(defaultWriter, [Number]);
+ReaderWriterRegistry.registerDefaultWriter(defaultWriter, [Boolean]);
 
 export default defaultWriter;
