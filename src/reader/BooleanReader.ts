@@ -8,7 +8,7 @@ const booleanReader: Reader<Boolean> = function(value: JsValue) {
         if(typeof value === 'boolean') {
             resolve(value)
         } else {
-            reject(`The value is not a number value.`)
+            reject(`The value is not a boolean value.`)
         }
     })
 };

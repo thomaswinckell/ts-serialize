@@ -29,9 +29,9 @@ function Serialize<T>(...genericTypes : PropTypes) : ISerializeDecorator<T> {
         let reflectedType = Reflect.getMetadata('design:type', target, classPropertyName);
 
         if(!Array.isArray(genericTypes[0])) {
-            types = [reflectedType, ...genericTypes];
-        } else {
             types = [reflectedType, genericTypes];
+        } else {
+            types = [reflectedType, ...genericTypes];
         }
 
         if(!_writer) {

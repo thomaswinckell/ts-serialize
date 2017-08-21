@@ -7,7 +7,7 @@ export default class PropMetadata<T> {
 
     constructor(
         public jsonName : string,
-        public className : string,
+        public propName : string,
         public types : PropTypes,
         public writer ?: Writer<T>,
         public reader ?: Reader<T>,
