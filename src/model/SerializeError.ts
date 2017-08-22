@@ -37,7 +37,7 @@ namespace SerializeError {
             if(Array.isArray(curr)) {
                 return {
                     isPreviousArray: true,
-                    value : `${acc.value}<${typesToString(curr)}>`
+                    value : curr.length > 0 ? `${acc.value}<${typesToString(curr)}>` : acc.value
                 };
             } else {
                 const typeName = curr.prototype.constructor.name.toString();

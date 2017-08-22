@@ -1,6 +1,6 @@
 import test from "ava"
 
-import {Serializable, Serialize} from "../src"
+import {Serializable, Serialize} from "../../src"
 
 
 (async function() {
