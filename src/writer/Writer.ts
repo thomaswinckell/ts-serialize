@@ -1,4 +1,4 @@
-import {Json, JsValue} from "ts-json-definition";
+import {JsObject, JsValue} from "ts-json-definition";
 import PropTypes from "../core/PropTypes";
 
 
@@ -10,6 +10,6 @@ import PropTypes from "../core/PropTypes";
  * @parentClass The parent of the class value to write (useful for corner cases)
  * @parentJson The parent of the produced json value (useful for corner cases)
  */
-type Writer<T> = (value: T, types: PropTypes, parentClass ?: any, parentJson ?: Json) => Promise<JsValue>;
+type Writer<T> = (value: T, types: PropTypes, parentClass ?: any, parentJson ?: JsObject) => Promise<JsValue>;
 
 export default Writer;

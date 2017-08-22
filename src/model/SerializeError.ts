@@ -6,26 +6,26 @@ import PropTypes from "../core/PropTypes";
  */
 namespace SerializeError {
 
-    export function writerError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, jsonPath: string[], classPath: string[]) {
-        return readerWriterError(className, propMetadata, writerError, jsonPath, classPath, false);
+    export function writerError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, classPath: string[]) {
+        return readerWriterError(className, propMetadata, writerError, classPath, false);
     }
 
-    export function readerError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, jsonPath: string[], classPath: string[]) {
-        return readerWriterError(className, propMetadata, writerError, jsonPath, classPath, true);
+    export function readerError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, classPath: string[]) {
+        return readerWriterError(className, propMetadata, writerError, classPath, true);
     }
 
     /**
      *  Format a clear error message used when a reader is not found for the given types
      */
-    export function undefinedReaderError<T>(className : string, propMetadata: PropMetadata<T>) {
-        return new Error(`Cannot find reader for property ${className}.${propMetadata.propName} of type '${typesToString(propMetadata.types)}'.`)
+    export function undefinedReaderError<T>(className : string, propMetadata: PropMetadata<T>, classPath: string[]) {
+        return new Error(`Cannot find reader for property ${className}.${classPath.join('')}${propMetadata.propName} of type '${typesToString(propMetadata.types)}'.`)
     }
 
     /**
      *  Format a clear error message used when a writer is not found for the given types
      */
-    export function undefinedWriterError<T>(className : string, propMetadata: PropMetadata<T>) {
-        return new Error(`Cannot find writer for property ${className}.${propMetadata.propName} of type '${typesToString(propMetadata.types)}'.`)
+    export function undefinedWriterError<T>(className : string, propMetadata: PropMetadata<T>, classPath: string[]) {
+        return new Error(`Cannot find writer for property ${className}.${classPath.join('')}${propMetadata.propName} of type '${typesToString(propMetadata.types)}'.`)
     }
 
     /**
@@ -56,7 +56,7 @@ namespace SerializeError {
     /**
      * Format a clear error message for readers/writers errors
      */
-    function readerWriterError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, jsonPath: string[], classPath: string[], isReading: boolean) : Error {
+    function readerWriterError<T>(className : string, propMetadata: PropMetadata<T>, writerError: any, classPath: string[], isReading: boolean) : Error {
 
         const writerMessage = writerError instanceof Error ? writerError.message : writerError.toString();
 
@@ -70,7 +70,7 @@ namespace SerializeError {
             toType = 'JSON value';
         }
 
-        const errorMessage = `The property ${className}.${propMetadata.propName} cannot be serialized into ${toType}.\nCause: ${writerMessage}`;
+        const errorMessage = `The property ${className}.${classPath.join('')}${propMetadata.propName} cannot be serialized into ${toType}.\nCause: ${writerMessage}`;
 
         return new Error(errorMessage);
     }

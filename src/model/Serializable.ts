@@ -1,7 +1,6 @@
 import 'reflect-metadata'
-import {JsObject, JsArray} from "ts-json-definition"
+import {JsObject, JsArray, Json} from "ts-json-definition"
 import ObjectMetadata from "../metadata/ObjectMetadata";
-import SerializeError from "./SerializeError";
 
 
 /**
@@ -63,27 +62,22 @@ abstract class Serializable {
         }
     }
 
-    static fromJsObject<T>(jsObject: JsObject, failFast : boolean = true, jsonPath: string[] = [], classPath: string[] = []): Promise<T> {
+    static fromJson<T>(json: Json, failFast : boolean = true, classPath: string[] = []): Promise<T> {
+        if(Array.isArray(json)) {
+            return this.fromJsArray(json, failFast, classPath) as any
+        } else if(typeof json === 'object') {
+            return this.fromJsObject<T>(json as JsObject, failFast, classPath)
+        } else {
+            return Promise.reject(`Bad usage of Serializable.fromJson function : json parameter should be an array or an object.`)
+        }
+    }
+
+    static fromJsObject<T>(jsObject: JsObject, failFast : boolean = true, classPath: string[] = []): Promise<T> {
         let obj = new (this.prototype.constructor as any)();
 
         const readsPromises = ObjectMetadata.getObjectMetadata(this.prototype).map(propMetadata => {
 
-            return new Promise((resolve, reject) => {
-
-                if(!propMetadata.reader) {
-                    return reject(SerializeError.undefinedReaderError(this.prototype.constructor.name, propMetadata))
-                }
-
-                propMetadata.reader(jsObject[propMetadata.jsonName], propMetadata.types, jsObject, obj).then(value => {
-                    resolve({
-                        value,
-                        propMetadata
-                    });
-                }).catch(e => {
-                    const error = SerializeError.readerError(this.prototype.constructor.name, propMetadata, e, jsonPath, classPath);
-                    reject(error)
-                });
-            });
+            return propMetadata.reads(this.prototype.constructor.name, jsObject, obj, failFast, classPath,)
         });
 
         return new Promise((resolve, reject) => {
@@ -100,14 +94,13 @@ abstract class Serializable {
         });
     }
 
-    static fromJsArray<T>(jsArray: JsArray, failFast : boolean = true, jsonPath: string[] = [], classPath: string[] = []): Promise<T[]> {
+    static fromJsArray<T>(jsArray: JsArray, failFast : boolean = true, classPath: string[] = []): Promise<T[]> {
 
         const readsPromises = jsArray.map((jsObject: JsObject, index: number) => {
 
-            const newJsonPath = [...jsonPath, `[${index}]`];
             const newClassPath = [...classPath, `[${index}]`];
 
-            return this.fromJsObject<T>(jsObject, failFast, newJsonPath, newClassPath);
+            return this.fromJsObject<T>(jsObject, failFast, newClassPath);
         });
 
         return new Promise((resolve, reject) => {
@@ -115,25 +108,12 @@ abstract class Serializable {
         });
     }
 
-    toJson(failFast : boolean = true, jsonPath: string[] = [], classPath: string[] = []): Promise<JsObject> {
+    toJson(failFast : boolean = true, classPath: string[] = []): Promise<JsObject> {
         let obj = {};
 
         const writesPromises = ObjectMetadata.getObjectMetadata(this.constructor.prototype).map(propMetadata => {
 
-            return new Promise((resolve, reject) => {
-                if(!propMetadata.writer) {
-                    return reject(SerializeError.undefinedWriterError(this.constructor.name, propMetadata))
-                }
-                propMetadata.writer(this[propMetadata.propName], propMetadata.types, this, obj).then(value => {
-                    resolve({
-                        value,
-                        propMetadata
-                    });
-                }).catch(e => {
-                    const error = SerializeError.writerError(this.constructor.name, propMetadata, e, jsonPath, classPath);
-                    reject(error);
-                });
-            })
+            return propMetadata.writes(this.constructor.name, this, obj, failFast, classPath);
         });
 
         return new Promise((resolve, reject) => {
