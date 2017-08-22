@@ -35,8 +35,8 @@
   "scripts": {
     "clean": "rm -rf src/**/*.js && rm -rf src/**/*.d.ts && rm -rf test/**/*.js && rm -rf test/**/*.d.ts",
     "build": "tsc && babel ./src --out-dir ./src --ignore ./node_modules/",
-    "test": "npm run build && ava test/**/*.js",
-    "posttest": "npm run clean"
+    "pretest": "npm run build",
+    "test": "ava test/**/*.js; npm run clean"
   },
   "dependencies": {
     "lodash.flattendeep": "4.4.0",
