@@ -37,6 +37,7 @@ import {Serializable, Serialize} from "../../src"
 
     test(`Reads/writes Serializable with Serializable property`, t => {
         t.deepEqual(fooJson.bar, {str : 'titi'});
+        t.is(fooClass.bar.str, 'titi');
     });
 
     test(`Reads/writes Serializable with Serializable[] property`, t => {
