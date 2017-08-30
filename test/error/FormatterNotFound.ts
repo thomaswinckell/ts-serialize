@@ -66,11 +66,14 @@ import {Serializable, Serialize} from "../../src"
             });
     });
 
+    class NotSerializableGenerics<T, U> {
+
+    }
 
     class ComplexFoo extends Serializable {
 
         @Serialize([String,Array,[Map,[String,Number]]])
-        public complexType: Map<String, Array<Map<String, Number>>>;
+        public complexType: NotSerializableGenerics<String, Array<Map<String, Number>>>;
     }
 
     test(`Error message when there is no reader found with complex types`, t => {
@@ -78,7 +81,7 @@ import {Serializable, Serialize} from "../../src"
         return ComplexFoo.fromJsObject<ComplexFoo>({})
             .then(() => t.fail('An error should be raised when a reader is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find reader for property ComplexFoo.complexType of type 'Map<String, Array<Map<String, Number>>>'.";
+                const expected = "Cannot find reader for property ComplexFoo.complexType of type 'NotSerializableGenerics<String, Array<Map<String, Number>>>'.";
                 t.deepEqual(err.message, expected);
             });
     });
@@ -88,7 +91,7 @@ import {Serializable, Serialize} from "../../src"
         return new ComplexFoo().toJson()
             .then(() => t.fail('An error should be raised when a writer is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find writer for property ComplexFoo.complexType of type 'Map<String, Array<Map<String, Number>>>'.";
+                const expected = "Cannot find writer for property ComplexFoo.complexType of type 'NotSerializableGenerics<String, Array<Map<String, Number>>>'.";
                 t.deepEqual(err.message, expected);
             });
     });
