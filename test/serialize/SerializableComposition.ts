@@ -21,6 +21,7 @@ import {Serializable, Serialize} from "../../src"
         @Serialize()
         public bar : Bar;
 
+        @Serialize(Bar)
         public barList : Bar[];
 
         constructor(bar: Bar, barList: Bar[]) {
@@ -36,11 +37,10 @@ import {Serializable, Serialize} from "../../src"
 
     test(`Reads/writes Serializable with Serializable property`, t => {
         t.deepEqual(fooJson.bar, {str : 'titi'});
-        t.is(fooClass.bar.str, 'titi');
     });
 
-    /*test(`Reads/writes Serializable with Serializable[] property`, t => {
-        t.deepEqual(fooJson.bar, [{str : 'toto'}, {str: 'tata'}]);
+    test(`Reads/writes Serializable with Serializable[] property`, t => {
+        t.deepEqual(fooJson.barList, [{str : 'toto'}, {str: 'tata'}]);
     });
 
     const badJson = {
@@ -50,7 +50,8 @@ import {Serializable, Serialize} from "../../src"
 
     const errorMessages = [
         'The property Foo.bar.str cannot be serialized into String.\nCause: The value is not a string value.',
-        'The property Foo.bar[0].str cannot be serialized into String.\nCause: The value is not a string value.',
+        'The property Foo.barList[0].str cannot be serialized into String.\nCause: The value is not a string value.',
+        'The property Foo.barList[1].str cannot be serialized into String.\nCause: The value is not a string value.',
     ];
 
     test(`Handles reads/writes error`, t => {
@@ -61,6 +62,6 @@ import {Serializable, Serialize} from "../../src"
                 const messages = err.map(e => e.message);
                 t.deepEqual(messages, errorMessages);
             });
-    });*/
+    });
 
 }());

@@ -39,24 +39,29 @@ import {Serializable, Serialize} from "../../src"
 
         @Serialize(NotSerializable)
         public bar : NotSerializable[];
+
+        constructor(bar : NotSerializable[]) {
+            super();
+            this.bar = bar;
+        }
     }
 
-    test(`Error message when there is no reader found with Array`, t => {
+    test(`Error message when there is no reader found for a generic type`, t => {
 
-        return FooArray.fromJsObject<FooArray>({})
-            .then(() => t.fail('An error should be raised when an array reader is not found'))
+        return FooArray.fromJsObject<FooArray>({ bar : [{}]})
+            .then(() => t.fail('An error should be raised when a reader for a generic type is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find reader for property FooArray.bar of type 'Array<NotSerializable>'.";
+                const expected = "Cannot find reader for property FooArray.bar[0] of type 'NotSerializable'.";
                 t.deepEqual(err.message, expected);
             });
     });
 
-    test(`Error message when there is no writer found with Array`, t => {
+    test(`Error message when there is no writer found for a generic type`, t => {
 
-        return new FooArray().toJson()
-            .then(() => t.fail('An error should be raised when an array writer is not found'))
+        return new FooArray([{}]).toJson()
+            .then(() => t.fail('An error should be raised when a writer for a generic type is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find writer for property FooArray.bar of type 'Array<NotSerializable>'.";
+                const expected = "Cannot find writer for property FooArray.bar[0] of type 'NotSerializable'.";
                 t.deepEqual(err.message, expected);
             });
     });

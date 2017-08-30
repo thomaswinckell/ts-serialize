@@ -6,10 +6,8 @@ import PropTypes from "../core/PropTypes";
  * Validate and transform a json property into a typed class property
  *
  * @value The value of the json property to read
- * @types The types that the value is supposed to have (useful for generic readers)
- * @parentJson The parent of the json value to read (useful for corner cases)
- * @parentClass The parent of the produced class value (useful for corner cases)
+ * @genericTypes The generic types of the type that the value is supposed to have (useful for generic readers)
  */
-type Reader<T> = (value: JsValue, types: PropTypes, parentJson ?: Json, parentClass ?: any) => Promise<T>;
+type Reader<T> = (value: JsValue, genericTypes: PropTypes, classPath: string[], failFast: boolean) => Promise<T>;
 
 export default Reader;

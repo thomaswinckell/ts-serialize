@@ -39,7 +39,6 @@
     "test": "ava test/**/*.js; npm run clean"
   },
   "dependencies": {
-    "lodash.flattendeep": "4.4.0",
     "reflect-metadata": "0.1.10",
     "ts-json-definition": "0.0.2"
   },

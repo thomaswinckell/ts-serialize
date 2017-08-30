@@ -1,39 +1,7 @@
 import 'reflect-metadata'
-import {JsObject, JsArray, Json} from "ts-json-definition"
+import {JsObject, JsArray, Json, JsValue} from "ts-json-definition"
 import ObjectMetadata from "../metadata/ObjectMetadata";
-
-
-/**
- * Same as Promise.all but retrieve all errors if failFast activated
- *
- * /!\ Use only here ! We know that there will be only instances of Error that will be rejected here.
- * @see formatErrorMessage
- */
-function promiseAll<T>(promises : Promise<T>[], failFast : boolean) : Promise<T[]> {
-
-    if(failFast) {
-        return Promise.all(promises);
-
-    } else {
-
-        return new Promise<T[]>((resolve, reject) => {
-
-            const caughtPromises = promises.map(p => p.catch(e => e));
-
-            Promise.all(caughtPromises).then((resOrErrors : (T|Error)[]) => {
-
-                const errors = resOrErrors.filter(r => r instanceof Error);
-                const results = resOrErrors.filter(r => !(r instanceof Error));
-
-                if(errors.length === 0) {
-                    resolve(results as T[]);
-                } else {
-                    reject(resOrErrors);
-                }
-            });
-        });
-    }
-}
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -72,17 +40,24 @@ abstract class Serializable {
         }
     }
 
-    static fromJsObject<T>(jsObject: JsObject, failFast : boolean = true, classPath: string[] = []): Promise<T> {
+    static fromJsObject<T>(jsObject: JsObject, failFast : boolean = true, classPath: string[] = [this.prototype.constructor.name]): Promise<T> {
         let obj = new (this.prototype.constructor as any)();
 
         const readsPromises = ObjectMetadata.getObjectMetadata(this.prototype).map(propMetadata => {
 
-            return propMetadata.reads(this.prototype.constructor.name, jsObject, obj, failFast, classPath,)
+            return new Promise((resolve, reject) => {
+
+                const newClassPath = [...classPath, `.${propMetadata.propName}` ];
+
+                SerializeHelper.readsFromMetadata(propMetadata, jsObject[propMetadata.jsonName], newClassPath, failFast)
+                    .then(value => resolve({ value, propMetadata }))
+                    .catch(reject)
+            })
         });
 
         return new Promise((resolve, reject) => {
 
-            promiseAll(readsPromises, failFast).then((readsResults : any[]) => {
+            SerializeHelper.promiseAll(readsPromises, failFast).then((readsResults : any[]) => {
 
                 readsResults.forEach(res => {
                     obj[res.propMetadata.propName] = res.value;
@@ -103,22 +78,28 @@ abstract class Serializable {
             return this.fromJsObject<T>(jsObject, failFast, newClassPath);
         });
 
-        return new Promise((resolve, reject) => {
-            promiseAll(readsPromises, failFast).then(resolve).catch(reject);
-        });
+        return SerializeHelper.promiseAll(readsPromises, failFast);
     }
 
-    toJson(failFast : boolean = true, classPath: string[] = []): Promise<JsObject> {
+    toJson(failFast : boolean = true, classPath: string[] = [this.constructor.name]): Promise<JsObject> {
         let obj = {};
 
         const writesPromises = ObjectMetadata.getObjectMetadata(this.constructor.prototype).map(propMetadata => {
 
-            return propMetadata.writes(this.constructor.name, this, obj, failFast, classPath);
+
+            return new Promise((resolve, reject) => {
+
+                const newClassPath = [...classPath, `.${propMetadata.propName}` ];
+
+                SerializeHelper.writesFromMetadata(propMetadata, this[propMetadata.propName], newClassPath, failFast)
+                    .then(value => resolve({ value, propMetadata }))
+                    .catch(reject)
+            })
         });
 
         return new Promise((resolve, reject) => {
 
-            promiseAll(writesPromises, failFast).then((writesResults : any[]) => {
+            SerializeHelper.promiseAll(writesPromises, failFast).then((writesResults : any[]) => {
 
                 writesResults.forEach(res => {
                     obj[res.propMetadata.jsonName] = res.value;
