@@ -1,7 +1,7 @@
 import SerializeError from "../model/SerializeError";
 import Serializable from "../model/Serializable";
 import {JsValue} from "ts-json-definition";
-import ReaderWriterRegistry from "./ReaderWriterRegistry";
+import FormatterRegistry from "./FormatterRegistry";
 import PropTypes from "./PropTypes";
 import PropMetadata from "../metadata/PropMetadata";
 
@@ -12,7 +12,7 @@ namespace SerializeHelper {
 
         const type = types[0];
         const genericTypes = genericTypesFromTypes(types);
-        const reader = ReaderWriterRegistry.getDefaultReader(type);
+        const reader = FormatterRegistry.getDefaultReader(type);
 
         if(reader) {
             return reader(value, genericTypes, classPath, failFast) as Promise<T>;
@@ -47,7 +47,7 @@ namespace SerializeHelper {
 
         const type = types[0];
         const genericTypes = genericTypesFromTypes(types);
-        const writer = ReaderWriterRegistry.getDefaultWriter(type);
+        const writer = FormatterRegistry.getDefaultWriter(type);
 
         if(writer) {
             return writer(value, genericTypes, classPath, failFast);

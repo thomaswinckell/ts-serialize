@@ -3,7 +3,7 @@ import Reader from "../reader/Reader";
 
 
 
-namespace ReaderWriterRegistry {
+namespace FormatterRegistry {
 
     /**
      * Key/value store for default readers / writers.
@@ -44,4 +44,4 @@ namespace ReaderWriterRegistry {
     }
 }
 
-export default ReaderWriterRegistry;
+export default FormatterRegistry;

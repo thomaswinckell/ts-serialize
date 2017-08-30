@@ -1,4 +1,4 @@
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import Writer from "./Writer";
 
 
@@ -6,6 +6,6 @@ const booleanWriter: Writer<boolean> = function(value: any) {
     return Promise.resolve(value)
 };
 
-ReaderWriterRegistry.registerDefaultWriter(booleanWriter, Boolean);
+FormatterRegistry.registerDefaultWriter(booleanWriter, Boolean);
 
 export default booleanWriter;

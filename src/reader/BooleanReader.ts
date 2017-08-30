@@ -1,6 +1,6 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import SerializeError from "../model/SerializeError";
 
 
@@ -15,6 +15,6 @@ const booleanReader: Reader<Boolean> = function(value: JsValue, genericTypes: Ob
 };
 
 
-ReaderWriterRegistry.registerDefaultReader(booleanReader, Boolean);
+FormatterRegistry.registerDefaultReader(booleanReader, Boolean);
 
 export default booleanReader;

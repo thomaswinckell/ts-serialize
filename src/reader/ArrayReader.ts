@@ -1,6 +1,6 @@
 import {Json, JsValue} from "ts-json-definition";
 import Reader from "./Reader";
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import SerializeHelper from "../core/SerializeHelper";
 import SerializeError from "../model/SerializeError";
 
@@ -25,6 +25,6 @@ const arrayReader: Reader<any[]> = function(json: JsValue, genericTypes: Object[
 };
 
 
-ReaderWriterRegistry.registerDefaultReader(arrayReader, Array);
+FormatterRegistry.registerDefaultReader(arrayReader, Array);
 
 export default arrayReader;

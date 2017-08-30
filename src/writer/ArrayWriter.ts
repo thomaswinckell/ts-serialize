@@ -1,4 +1,4 @@
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import Writer from "./Writer";
 import SerializeHelper from "../core/SerializeHelper";
 import {JsValue} from "ts-json-definition";
@@ -17,6 +17,6 @@ const arrayWriter: Writer<any[]> = function(arr: any[], genericTypes: Object[], 
     return SerializeHelper.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;
 };
 
-ReaderWriterRegistry.registerDefaultWriter(arrayWriter, Array);
+FormatterRegistry.registerDefaultWriter(arrayWriter, Array);
 
 export default arrayWriter;

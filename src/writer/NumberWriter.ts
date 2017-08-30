@@ -1,4 +1,4 @@
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import Writer from "./Writer";
 
 
@@ -6,6 +6,6 @@ const numberWriter: Writer<number> = function(value: any) {
     return Promise.resolve(value)
 };
 
-ReaderWriterRegistry.registerDefaultWriter(numberWriter, Number);
+FormatterRegistry.registerDefaultWriter(numberWriter, Number);
 
 export default numberWriter;

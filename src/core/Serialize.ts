@@ -1,13 +1,11 @@
 import Writer from "../writer/Writer";
 import Reader from "../reader/Reader";
 import Serializable from "../model/Serializable";
-import ReaderWriterRegistry from "./ReaderWriterRegistry";
+import FormatterRegistry from "./FormatterRegistry";
 import ObjectMetadata from "../metadata/ObjectMetadata";
 import PropMetadata from "../metadata/PropMetadata";
 import ISerializeDecorator from "./ISerializeDecorator";
 import PropTypes from "./PropTypes";
-import {JsObject} from "ts-json-definition";
-import SerializeError from "../model/SerializeError";
 
 
 function Serialize<T>(...genericTypes : PropTypes) : ISerializeDecorator<T> {
@@ -37,11 +35,11 @@ function Serialize<T>(...genericTypes : PropTypes) : ISerializeDecorator<T> {
         }
 
         if(!_writer) {
-            _writer = ReaderWriterRegistry.getDefaultWriter(types[0]);
+            _writer = FormatterRegistry.getDefaultWriter(types[0]);
         }
 
         if(!_reader) {
-            _reader = ReaderWriterRegistry.getDefaultReader(types[0]);
+            _reader = FormatterRegistry.getDefaultReader(types[0]);
         }
 
         const propMetadata = new PropMetadata(_name, classPropertyName, types, _writer, _reader);

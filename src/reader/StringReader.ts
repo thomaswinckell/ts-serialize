@@ -1,6 +1,6 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
-import ReaderWriterRegistry from "../core/ReaderWriterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import SerializeError from "../model/SerializeError";
 
 
@@ -14,6 +14,6 @@ const stringReader: Reader<String> = function(value: JsValue, genericTypes: Obje
     })
 };
 
-ReaderWriterRegistry.registerDefaultReader(stringReader, String);
+FormatterRegistry.registerDefaultReader(stringReader, String);
 
 export default stringReader;
