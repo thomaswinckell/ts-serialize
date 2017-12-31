@@ -40,12 +40,6 @@ namespace Serialize {
 
     export function readsFromMetadata<T>(propMetadata: PropMetadata<T>, value: JsValue, classPath: string[], failFast: boolean) : Promise<T> {
 
-        console.log('readsFromMetadata');
-        console.log(propMetadata.types);
-
-        console.log('propMetadata.reader');
-        console.log(propMetadata.reader);
-
         if(propMetadata.reader) {
             return propMetadata.reader(value, firstTypeFromTypes(propMetadata.types), genericTypesFromTypes(propMetadata.types), classPath, failFast)
         } else {

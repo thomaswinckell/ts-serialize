@@ -38,8 +38,6 @@ namespace FormatterRegistry {
      * Get the default reader for the given types
      */
     export function getDefaultReader<T>(type : Object) : Reader<T>|undefined {
-        console.log('readersStore');
-        console.log(typeToPrototype(String.prototype) === typeToPrototype(Array.prototype));
         return readersStore[typeToPrototype(type).constructor.name];
     }
 
@@ -47,8 +45,6 @@ namespace FormatterRegistry {
      * Register a default reader for the given types
      */
     export function registerDefaultReader<T>(reader : Reader<T>, type : Object|TypeDefinition<T>) {
-        console.log('registerDefaultReader');
-        console.log(typeToPrototype(type));
         readersStore[typeToPrototype(type).constructor.name] = reader;
     }
 }

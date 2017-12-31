@@ -18,8 +18,6 @@ namespace SerializeError {
      *  Format a clear error message used when a reader is not found for the given types
      */
     export function undefinedReaderError(types: PrototypeListDefinition, classPath: string[]) {
-        console.log('types');
-        console.log(types);
         if(classPath.length === 0) {
             return new Error(`Cannot find reader for type ${typesToString(types)}.`)
         }
@@ -63,8 +61,6 @@ namespace SerializeError {
      * Ex : [Map[String, Number]] -> "Map<String, Number>"
      */
     function typesToString(types : PrototypeListDefinition) : string {
-        console.log('types');
-        console.log(types);
         return types.reduce((acc: any, curr: any) => {
             if(curr instanceof Array) {
                 return {

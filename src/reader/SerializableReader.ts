@@ -12,10 +12,6 @@ const serializableReader: Reader<any> = function(json: JsValue, prototype: Objec
 
         let obj = new (prototype.constructor as any)();
 
-        console.log('serializableReader');
-        console.log(prototype);
-        console.log(ObjectMetadata.getObjectMetadata(prototype));
-
         const readsPromises = ObjectMetadata.getObjectMetadata(prototype).map(propMetadata => {
 
             return new Promise((resolve, reject) => {

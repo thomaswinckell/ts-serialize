@@ -44,11 +44,6 @@ function Serializable<T>(...genericTypes : (TypeListDefinition|PrototypeListDefi
 
         ObjectMetadata.registerProperty(target.constructor.prototype, propMetadata);
 
-        console.log('register')
-        console.log(target.constructor.prototype)
-        console.log(propMetadata)
-        console.log(types[0])
-        console.log(FormatterRegistry.getDefaultReader(types[0]))
         FormatterRegistry.registerDefaultReader(serializableReader, target.constructor.prototype);
         FormatterRegistry.registerDefaultWriter(serializableWriter, target.constructor.prototype);
     };
