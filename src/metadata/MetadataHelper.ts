@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import {default as ObjectMetadata, PartialObjectMetadata} from "./ObjectMetadata";
+import Reader from "../reader/Reader";
+import Writer from "../writer/Writer";
 
 const metadataKey = "design:serializers";
 
@@ -36,6 +38,14 @@ namespace MetadataHelper {
 
     export function setJsonName(target: Object, propName: string, jsonName: string): void {
         setPartialMetadata(target, {[propName] : { jsonName }});
+    }
+
+    export function setReader(target: Object, propName: string, reader: Reader<any>): void {
+        setPartialMetadata(target, {[propName] : { reader }});
+    }
+
+    export function setWriter(target: Object, propName: string, writer: Writer<any>): void {
+        setPartialMetadata(target, {[propName] : { writer }});
     }
 }
 
