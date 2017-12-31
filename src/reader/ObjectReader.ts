@@ -7,8 +7,7 @@ import {isObject} from "../utils/Utils";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
 
 
-
-const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
+const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
 
     if(isObject(json)) {
 
@@ -16,7 +15,9 @@ const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Obje
 
         const readsPromises = Object.keys(json).map((key: any) => {
             const value = json[key];
-            const newClassPath = [...classPath, `[${key}]`];
+            const newClassPath = classPath.length === 0 ?
+                ['Object', `[${key}]`] :
+                [...classPath, `[${key}]`];
 
             return Serialize.promiseAll([
                 Serialize.reads(value, valueTypes, newClassPath, failFast),
@@ -28,21 +29,20 @@ const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Obje
 
             Serialize.promiseAll(readsPromises, failFast)
                 .then((mapParts : any[]) => {
-                    const map = mapParts.reduce<Map<any, any>>((acc, [value, key]) => {
-                        acc.set(key, value);
-                        return acc;
-                    }, new Map());
+                    const map = mapParts.reduce<{}>((acc, [value, key]) => ({
+                        ...acc,
+                        [key]: value
+                    }), {});
                     resolve(map);
                 })
                 .catch(reject)
         });
-
     } else {
-        return Promise.reject(SerializeError.readerError([Map, genericTypes], `The value is not a Map.`, classPath))
+        return Promise.reject(SerializeError.readerError([Array, genericTypes], `The value is not an object.`, classPath))
     }
 };
 
 
-FormatterRegistry.registerDefaultReader(mapReader, Map);
+FormatterRegistry.registerDefaultReader(objectReader, Object);
 
-export default mapReader;
+export default objectReader;

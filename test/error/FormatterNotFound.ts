@@ -9,59 +9,58 @@ import {Serializable, Serialize} from "../../src"
 
     }
 
-    class Foo extends Serializable {
+    class Foo {
 
-        @Serialize()
+        @Serializable()
         public bar : NotSerializable;
     }
 
     test(`Error message when there is no reader found`, t => {
 
-        return Foo.fromJsObject<Foo>({})
+        return Serialize.reads({}, Foo)
             .then(() => t.fail('An error should be raised when an array reader is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find reader for property Foo.bar of type 'NotSerializable'.";
+                const expected = "Cannot find reader for Foo.bar of type NotSerializable.";
                 t.deepEqual(err.message, expected);
             });
     });
 
     test(`Error message when there is no writer found`, t => {
 
-        return new Foo().toJson()
+        return Serialize.writes(new Foo(), Foo)
             .then(() => t.fail('An error should be raised when an array writer is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find writer for property Foo.bar of type 'NotSerializable'.";
+                const expected = "Cannot find writer for Foo.bar of type NotSerializable.";
                 t.deepEqual(err.message, expected);
             });
     });
 
-    class FooArray extends Serializable {
+    class FooArray {
 
-        @Serialize(NotSerializable)
+        @Serializable(NotSerializable)
         public bar : NotSerializable[];
 
         constructor(bar : NotSerializable[]) {
-            super();
             this.bar = bar;
         }
     }
 
     test(`Error message when there is no reader found for a generic type`, t => {
 
-        return FooArray.fromJsObject<FooArray>({ bar : [{}]})
+        return Serialize.reads( { bar : [{}]}, FooArray)
             .then(() => t.fail('An error should be raised when a reader for a generic type is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find reader for property FooArray.bar[0] of type 'NotSerializable'.";
+                const expected = "Cannot find reader for FooArray.bar[0] of type NotSerializable.";
                 t.deepEqual(err.message, expected);
             });
     });
 
     test(`Error message when there is no writer found for a generic type`, t => {
 
-        return new FooArray([{}]).toJson()
+        return Serialize.writes(new FooArray([{}]), FooArray)
             .then(() => t.fail('An error should be raised when a writer for a generic type is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find writer for property FooArray.bar[0] of type 'NotSerializable'.";
+                const expected = "Cannot find writer for FooArray.bar[0] of type NotSerializable.";
                 t.deepEqual(err.message, expected);
             });
     });
@@ -70,28 +69,28 @@ import {Serializable, Serialize} from "../../src"
 
     }
 
-    class ComplexFoo extends Serializable {
+    class ComplexFoo {
 
-        @Serialize([String,Array,[Map,[String,Number]]])
+        @Serializable([String,Array,[Map,[String,Number]]])
         public complexType: NotSerializableGenerics<String, Array<Map<String, Number>>>;
     }
 
     test(`Error message when there is no reader found with complex types`, t => {
 
-        return ComplexFoo.fromJsObject<ComplexFoo>({})
+        return Serialize.reads( {}, ComplexFoo)
             .then(() => t.fail('An error should be raised when a reader is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find reader for property ComplexFoo.complexType of type 'NotSerializableGenerics<String, Array<Map<String, Number>>>'.";
+                const expected = "Cannot find reader for ComplexFoo.complexType of type NotSerializableGenerics<String, Array<Map<String, Number>>>.";
                 t.deepEqual(err.message, expected);
             });
     });
 
     test(`Error message when there is no writer found with complex types`, t => {
 
-        return new ComplexFoo().toJson()
+        return Serialize.writes(new ComplexFoo(), ComplexFoo)
             .then(() => t.fail('An error should be raised when a writer is not found'))
             .catch((err : Error) => {
-                const expected = "Cannot find writer for property ComplexFoo.complexType of type 'NotSerializableGenerics<String, Array<Map<String, Number>>>'.";
+                const expected = "Cannot find writer for ComplexFoo.complexType of type NotSerializableGenerics<String, Array<Map<String, Number>>>.";
                 t.deepEqual(err.message, expected);
             });
     });

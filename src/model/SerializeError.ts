@@ -1,48 +1,59 @@
-import PropTypes from "../core/PropTypes";
+import {PrototypeListDefinition} from "../core/TypesDefinition";
+import Serialize from "../core/Serialize";
 
 /**
  * Utils functions to help handle serialize errors
  */
 namespace SerializeError {
 
-    export function writerError<T>(types: PropTypes, writerError: any, classPath: string[]) {
+    export function writerError(types: PrototypeListDefinition, writerError: any, classPath: string[]) {
         return readerWriterError(types, writerError, classPath, false);
     }
 
-    export function readerError<T>(types: PropTypes, writerError: any, classPath: string[]) {
+    export function readerError(types: PrototypeListDefinition, writerError: any, classPath: string[]) {
         return readerWriterError(types, writerError, classPath, true);
     }
 
     /**
      *  Format a clear error message used when a reader is not found for the given types
      */
-    export function undefinedReaderError<T>(types: PropTypes, classPath: string[]) {
-        return new Error(`Cannot find reader for property ${classPath.join('')} of type '${typesToString(types)}'.`)
+    export function undefinedReaderError(types: PrototypeListDefinition, classPath: string[]) {
+        console.log('types');
+        console.log(types);
+        if(classPath.length === 0) {
+            return new Error(`Cannot find reader for type ${typesToString(types)}.`)
+        }
+
+        return new Error(`Cannot find reader for ${classPath.join('')} of type ${typesToString(types)}.`)
     }
 
     /**
      *  Format a clear error message used when a writer is not found for the given types
      */
-    export function undefinedWriterError<T>(types: PropTypes, classPath: string[]) {
-        return new Error(`Cannot find writer for property ${classPath.join('')} of type '${typesToString(types)}'.`)
+    export function undefinedWriterError(types: PrototypeListDefinition, classPath: string[]) {
+        if(classPath.length === 0) {
+            return new Error(`Cannot find writer for type '${typesToString(types)}'.`)
+        }
+
+        return new Error(`Cannot find writer for ${classPath.join('')} of type ${typesToString(types)}.`);
     }
 
     /**
      * Format a clear error message for readers/writers errors
      */
-    function readerWriterError<T>(types : PropTypes, writerError: any, classPath: string[], isReading: boolean) : Error {
+    function readerWriterError(types : PrototypeListDefinition, writerError: any, classPath: string[], isReading: boolean) : Error {
 
         const writerMessage = writerError instanceof Error ? writerError.message : writerError.toString();
 
         let toType = 'unknown type';
 
         if(isReading) {
-            toType = typesToString(types)
+            toType = typesToString(Serialize.extractPrototypes(types))
         } else {
             toType = 'JSON value';
         }
 
-        const errorMessage = `The property ${classPath.join('')} cannot be serialized into ${toType}.\nCause: ${writerMessage}`;
+        const errorMessage = `${classPath.join('')} cannot be serialized into ${toType}.\nCause: ${writerMessage}`;
 
         return new Error(errorMessage);
     }
@@ -51,15 +62,17 @@ namespace SerializeError {
      * Print types
      * Ex : [Map[String, Number]] -> "Map<String, Number>"
      */
-    function typesToString(types : PropTypes) : string {
+    function typesToString(types : PrototypeListDefinition) : string {
+        console.log('types');
+        console.log(types);
         return types.reduce((acc: any, curr: any) => {
-            if(Array.isArray(curr)) {
+            if(curr instanceof Array) {
                 return {
                     isPreviousArray: true,
                     value : curr.length > 0 ? `${acc.value}<${typesToString(curr)}>` : acc.value
                 };
             } else {
-                const typeName = curr.prototype.constructor.name.toString();
+                const typeName = curr.constructor.name.toString();
                 return {
                     isPreviousArray: false,
                     value: `${acc.value}${acc.isPreviousArray ? '' : ', '}${typeName}`

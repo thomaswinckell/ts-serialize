@@ -1,11 +1,12 @@
 import FormatterRegistry from "../core/FormatterRegistry";
 import Writer from "./Writer";
-import SerializeHelper from "../core/SerializeHelper";
+import Serialize from "../core/Serialize";
 import {JsValue} from "ts-json-definition";
+import {PrototypeListDefinition} from "../core/TypesDefinition";
 
 
 
-const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, genericTypes: Object[], classPath: string[], failFast: boolean) {
+const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
 
     const [keyType, ...valueTypes] = genericTypes;
     let writesPromises : Promise<JsValue>[] = [];
@@ -15,16 +16,16 @@ const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, genericTyp
         const newClassPath = [...classPath, `[${key}]`];
 
         writesPromises.push(
-            SerializeHelper.promiseAll([
-                SerializeHelper.defaultWrites(value, valueTypes, newClassPath, failFast),
-                SerializeHelper.defaultWrites(key, [keyType], newClassPath, failFast),
+            Serialize.promiseAll([
+                Serialize.writes(value, valueTypes, newClassPath, failFast),
+                Serialize.writes(key, [keyType], newClassPath, failFast),
             ], failFast) as Promise<JsValue>
         )
     });
 
     return new Promise((resolve, reject) => {
 
-        SerializeHelper.promiseAll<JsValue>(writesPromises, failFast)
+        Serialize.promiseAll<JsValue>(writesPromises, failFast)
             .then((mapParts : any[]) => {
                 const map = mapParts.reduce((acc, [value, key]) => { acc[key] = value; return acc; }, {});
                 resolve(map);

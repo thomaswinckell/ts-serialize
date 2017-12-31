@@ -5,35 +5,33 @@ import {Serializable, Serialize} from "../../src"
 
 (async function() {
 
-    class Bar extends Serializable {
+    class Bar {
 
-        @Serialize()
+        @Serializable()
         public str : string;
 
         constructor(s: string) {
-            super();
             this.str = s;
         }
     }
 
-    class Foo extends Serializable {
+    class Foo {
 
-        @Serialize()
+        @Serializable()
         public bar : Bar;
 
-        @Serialize(Bar)
+        @Serializable(Bar)
         public barList : Bar[];
 
         constructor(bar: Bar, barList: Bar[]) {
-            super();
             this.bar = bar;
             this.barList = barList;
         }
     }
 
     const foo = new Foo(new Bar("titi"), [new Bar("toto"), new Bar("tata")]);
-    const fooJson = await foo.toJson();
-    const fooClass = await Foo.fromJsObject<Foo>(fooJson);
+    const fooJson = await Serialize.writes(foo, Foo) as any;
+    const fooClass = await Serialize.reads(fooJson, Foo);
 
     test(`Reads/writes Serializable with Serializable property`, t => {
         t.deepEqual(fooJson.bar, {str : 'titi'});
@@ -50,14 +48,14 @@ import {Serializable, Serialize} from "../../src"
     };
 
     const errorMessages = [
-        'The property Foo.bar.str cannot be serialized into String.\nCause: The value is not a string value.',
-        'The property Foo.barList[0].str cannot be serialized into String.\nCause: The value is not a string value.',
-        'The property Foo.barList[1].str cannot be serialized into String.\nCause: The value is not a string value.',
+        'Foo.bar.str cannot be serialized into String.\nCause: The value is not a string value.',
+        'Foo.barList[0].str cannot be serialized into String.\nCause: The value is not a string value.',
+        'Foo.barList[1].str cannot be serialized into String.\nCause: The value is not a string value.',
     ];
 
     test(`Handles reads/writes error`, t => {
 
-        return Foo.fromJsObject<Foo>(badJson, false)
+        return Serialize.reads(badJson, Foo, [], false)
             .then(() => t.fail('An error should be raised while serializing `badJson`'))
             .catch((err : Error[]) => {
                 const messages = err.map(e => e.message);

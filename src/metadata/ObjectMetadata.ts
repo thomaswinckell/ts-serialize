@@ -1,8 +1,15 @@
+import "reflect-metadata";
 import PropMetadata from "./PropMetadata";
 
 const metadataKey = "design:serializers";
 
 namespace ObjectMetadata {
+
+    export function hasObjectMetadata(target: Object): boolean {
+        console.log('Reflect.getMetadata(metadataKey, target)')
+        Reflect.getMetadata(metadataKey, target)
+        return !!Reflect.getMetadata(metadataKey, target);
+    }
 
     export function getObjectMetadata<T>(target: Object): PropMetadata<T>[] {
         return Reflect.getMetadata(metadataKey, target) || [];

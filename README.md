@@ -2,75 +2,51 @@
 
 ## ts-serialize
 
-Serialization tool using Typescript decorators and reflect-metadata.
+Serialization tool using Typescript decorators.
 
-### Usage
 
-Example with two classes :
+NEW API :
 
 ```
-import {Serializable, Serialize, SerializeOpt, SerializeArray} from "ts-serialize"
+import {Serializable, Serialize, DefaultValue, AfterReads, Writes, Named} from "ts-serialize"
  
-class Role extends Serializable {
- 
-    // Serialize knows the primitive types
-    // So it can automatically validate and convert it
-    @Serialize()
+@Serializable({
+    id: [String],
+    order: [Array, [Number]],
+    maybe: ["?", String],
+    strOrNumber: [String, "|", number],
+})
+class Foo {
+    @DefaultValue("anonymous")
     public id : string;
-    
-    @Serialize()
-    public order : number;
+    public maybe ?: string;
+    @AfterReads(arr => arr.map(o => o + 1))
+    public order : number[];
+    @Writes(s => s === "yes" ? "no" : s)
+    public maybe ?: string;
+    @JsonName("trololo")
+    public strOrNumber : string|number;
 }
+
+Serialize.registerWriter({
+    id: [String],
+    order: [Array, [Number]],
+    maybe: ["?", String],
+    strOrNumber: [String, "|", number],
+})
+
+Serialize.fromJson(Foo, {}); 
 ```
 
-```
-class User extends Serializable {
- 
-    // You can change the property name 
-    // (`id` for the class, `identifier` for the json)
-    @Serialize('identifier')
-    public id : string;
- 
-    @Serialize()
-    private age : number;
-    
-    @Serialize()
-    public language : string;
- 
-    // For optionals, you need to use a special decorator
-    @SerializeOpt( String )
-    public name : Optional< string >;
- 
-    // For arrays, you need to use a special decorator
-    @SerializeArray( User )
-    public children : User[];
- 
-    // Composition works naturally
-    @Serialize()
-    public role : Role;
-    
-    // You can apply your own transformers
-    @Serialize(() => Math.random() * 1000)
-    public random : number;
-}
-```
+TODO :
 
-Now, validate you json using one of those and get either errors or your serialized object/array
-
-
-```
-static fromString< T >(str: string): Either< Error[], T >;
- 
-static fromStringAsArray< T >(str: string): Either< Error[], Array< T > >;
- 
-static fromJsObject< T >(jsObject: JsObject, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T >;
- 
-static fromJsArray< T >(jsArray: JsArray, jsonPath: string[] = [], classPath: string[] = []): Either< Error[], T[] >;
-```
-
-And convert your instances to json using :
-
-```
-const user = new User();
-console.log(user.toJson());
-```
+- New serializable decorator syntax
+- JsonName decorator
+- DefaultValue decorator
+- BeforeReads / AfterReads / BeforeWrites / AfterWrites hooks decorators
+- Remove reflect-metadata dependency
+- New type definition syntax support (optional, and, or)
+- Optional type and @DefaultValue support
+- Generics supports
+- Runtime generics supports for serializable class with generics
+- Formatter registry, see TODO

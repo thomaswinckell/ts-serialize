@@ -5,16 +5,15 @@ import {Serializable, Serialize} from "../../src"
 
 (async function() {
 
-    class Foo extends Serializable {
+    class Foo {
 
-        @Serialize(String, Number)
+        @Serializable(String, Number)
         public simpleMap : Map<string, number>;
 
-        @Serialize(String, Map, [String, Number])
+        @Serializable(String, Map, [String, Number])
         public mapOfMap : Map<string, Map<string, number>>;
 
         constructor(simpleMap: Map<string, number>, mapOfMap : Map<string, Map<string, number>>) {
-            super();
             this.simpleMap = simpleMap;
             this.mapOfMap = mapOfMap;
         }
@@ -34,8 +33,8 @@ import {Serializable, Serialize} from "../../src"
 
     const foo = new Foo(simpleMap, mapOfMap);
 
-    const fooJson = await foo.toJson();
-    const fooClass = await Foo.fromJsObject<Foo>(fooJson);
+    const fooJson = await Serialize.writes(foo, Foo) as any;
+    const fooClass = await Serialize.reads(fooJson, Foo);
 
     test(`Reads/writes simple Map property of Serializable`, t => {
         t.deepEqual(fooJson.simpleMap, {foo: 1, bar: 2});
@@ -53,13 +52,13 @@ import {Serializable, Serialize} from "../../src"
     };
 
     const errorMessages = [
-        'The property Foo.simpleMap cannot be serialized into Map<String, Number>.\nCause: The value is not a Map.',
-        'The property Foo.mapOfMap[bar] cannot be serialized into Map<String, Number>.\nCause: The value is not a Map.',
+        'Foo.simpleMap cannot be serialized into Map<String, Number>.\nCause: The value is not a Map.',
+        'Foo.mapOfMap[bar] cannot be serialized into Map<String, Number>.\nCause: The value is not a Map.',
     ];
 
     test(`Handles reads/writes error`, t => {
 
-        return Foo.fromJsObject<Foo>(badJson, false)
+        return Serialize.reads(badJson, Foo, [], false)
             .then(() => t.fail('An error should be raised while serializing `badJson`'))
             .catch((err : Error[]) => {
                 const messages = err.map(e => e.message);
