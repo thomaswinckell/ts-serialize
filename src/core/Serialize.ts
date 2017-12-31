@@ -2,7 +2,7 @@ import {JsValue} from "ts-json-definition";
 import {TypeDefinition, PrototypeListDefinition, TypeListDefinition} from "./TypesDefinition";
 import FormatterRegistry from "./FormatterRegistry";
 import SerializeError from "../model/SerializeError";
-import PropMetadata from "../metadata/PropMetadata";
+import {PropMetadata} from "../metadata/ObjectMetadata";
 
 
 

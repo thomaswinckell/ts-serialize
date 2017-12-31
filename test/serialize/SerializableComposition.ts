@@ -5,9 +5,11 @@ import {Serializable, Serialize} from "../../src"
 
 (async function() {
 
+    @Serializable({
+        str: String
+    })
     class Bar {
 
-        @Serializable()
         public str : string;
 
         constructor(s: string) {
@@ -15,12 +17,14 @@ import {Serializable, Serialize} from "../../src"
         }
     }
 
+    @Serializable({
+        bar: Bar,
+        barList: [Array, Bar]
+    })
     class Foo {
 
-        @Serializable()
         public bar : Bar;
 
-        @Serializable(Bar)
         public barList : Bar[];
 
         constructor(bar: Bar, barList: Bar[]) {

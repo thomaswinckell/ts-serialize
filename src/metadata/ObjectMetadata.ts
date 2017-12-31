@@ -1,26 +1,22 @@
-import "reflect-metadata";
-import PropMetadata from "./PropMetadata";
+import Writer from "../writer/Writer";
+import Reader from "../reader/Reader";
+import {PrototypeListDefinition} from "../core/TypesDefinition";
 
-const metadataKey = "design:serializers";
 
-namespace ObjectMetadata {
+export class PropMetadata<T> {
 
-    export function hasObjectMetadata(target: Object): boolean {
-        return !!Reflect.getMetadata(metadataKey, target);
-    }
-
-    export function getObjectMetadata<T>(target: Object): PropMetadata<T>[] {
-        return Reflect.getMetadata(metadataKey, target) || [];
-    }
-
-    export function registerProperty<T>(target: Object, field: PropMetadata<T>): void {
-        const objectMetadata = getObjectMetadata(target);
-        if (objectMetadata) {
-            Reflect.defineMetadata(metadataKey, [...objectMetadata, field], target);
-        } else {
-            Reflect.defineMetadata(metadataKey, [field], target);
-        }
-    }
+    constructor(
+        public readonly jsonName : string,
+        public readonly propName : string,
+        public readonly types : PrototypeListDefinition,
+        public readonly writer ?: Writer<T>,
+        public readonly reader ?: Reader<T>,
+    ) {}
 }
+
+type ObjectMetadata = {
+    [key: string] : PropMetadata<any>
+}
+
 
 export default ObjectMetadata;

@@ -1,19 +1,23 @@
 import Writer from "./Writer";
 import Serialize from "../core/Serialize";
-import ObjectMetadata from "../metadata/ObjectMetadata";
 import SerializeError from "../model/SerializeError";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import MetadataHelper from "../metadata/MetadataHelper";
 
 
 
 const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: PrototypeListDefinition, givenClassPath: string[], failFast: boolean) {
 
-    if(ObjectMetadata.hasObjectMetadata(prototype)) {
+    if(MetadataHelper.hasMetadata(prototype)) {
 
         let json = {};
         const classPath = givenClassPath.length === 0 ? [obj.constructor.name] : givenClassPath;
 
-        const writesPromises = ObjectMetadata.getObjectMetadata(prototype).map(propMetadata => {
+        const metadata = MetadataHelper.getMetadata(prototype);
+
+        const writesPromises = Object.keys(metadata).map(propName => {
+
+            const propMetadata = metadata[propName];
 
             return new Promise((resolve, reject) => {
 

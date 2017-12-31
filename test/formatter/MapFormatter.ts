@@ -5,12 +5,14 @@ import {Serializable, Serialize} from "../../src"
 
 (async function() {
 
+    @Serializable({
+        simpleMap: [Map, [String, Number]],
+        mapOfMap: [Map, [String, Map, [String, Number]]],
+    })
     class Foo {
 
-        @Serializable(String, Number)
         public simpleMap : Map<string, number>;
 
-        @Serializable(String, Map, [String, Number])
         public mapOfMap : Map<string, Map<string, number>>;
 
         constructor(simpleMap: Map<string, number>, mapOfMap : Map<string, Map<string, number>>) {

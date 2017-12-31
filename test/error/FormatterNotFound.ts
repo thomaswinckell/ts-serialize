@@ -9,9 +9,10 @@ import {Serializable, Serialize} from "../../src"
 
     }
 
+    @Serializable({
+        bar: NotSerializable
+    })
     class Foo {
-
-        @Serializable()
         public bar : NotSerializable;
     }
 
@@ -35,9 +36,11 @@ import {Serializable, Serialize} from "../../src"
             });
     });
 
+    @Serializable({
+        bar: [Array, [NotSerializable]]
+    })
     class FooArray {
 
-        @Serializable(NotSerializable)
         public bar : NotSerializable[];
 
         constructor(bar : NotSerializable[]) {
@@ -69,9 +72,10 @@ import {Serializable, Serialize} from "../../src"
 
     }
 
+    @Serializable({
+        complexType: [NotSerializableGenerics, [String,Array,[Map,[String,Number]]]]
+    })
     class ComplexFoo {
-
-        @Serializable([String,Array,[Map,[String,Number]]])
         public complexType: NotSerializableGenerics<String, Array<Map<String, Number>>>;
     }
 

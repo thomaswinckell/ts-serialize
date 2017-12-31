@@ -1,80 +1,36 @@
 import "reflect-metadata";
-import Writer from "../writer/Writer";
-import Reader from "../reader/Reader";
 import FormatterRegistry from "./FormatterRegistry";
-import ObjectMetadata from "../metadata/ObjectMetadata";
-import PropMetadata from "../metadata/PropMetadata";
-import ISerializableDecorator from "./ISerializableDecorator";
+import {PropMetadata} from "../metadata/ObjectMetadata";
 import serializableReader from "../reader/SerializableReader";
 import serializableWriter from "../writer/SerializableWriter";
-import Serialize from "./Serialize";
 import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "./TypesDefinition";
+import MetadataHelper from "../metadata/MetadataHelper";
+import Serialize from "./Serialize";
 
 
-function Serializable<T>(...genericTypes : (TypeListDefinition|PrototypeListDefinition|TypeDefinition<T>|Object)[]) : ISerializableDecorator<T> {
+export type SerializableArgs = {
+    [key: string]: TypeListDefinition|PrototypeListDefinition|TypeDefinition<any>|Object
+}
 
-    let _name : string|undefined;
-    let _writer : Writer<T>|undefined;
-    let _reader : Reader<T>|undefined;
+function Serializable<T>(args : SerializableArgs) {
 
-    const SerializableDecorator : any = (target: Object, classPropertyName: string) => {
+    return function(target: any, classPropertyName?: string) {
 
-        if(!_name) {
-            _name = classPropertyName;
+        if(classPropertyName) {
+            throw '@Serializable should be used on a class, not on a class property';
         }
 
-        let types = [];
-        let reflectedType = Reflect.getMetadata('design:type', target, classPropertyName);
+        let objectMetadata = {};
 
-        if(genericTypes[0] instanceof Array) {
-            types = Serialize.extractPrototypes([reflectedType, ...genericTypes]);
-        } else {
-            types = Serialize.extractPrototypes([reflectedType, genericTypes]);
-        }
+        Object.keys(args).forEach(propertyName => {
+            objectMetadata[propertyName] = new PropMetadata(propertyName, propertyName, Serialize.extractPrototypes(args[propertyName]));
+        });
 
-        if(!_writer) {
-            _writer = FormatterRegistry.getDefaultWriter(types[0]);
-        }
+        MetadataHelper.registerMetadata(target.prototype, objectMetadata);
 
-        if(!_reader) {
-            _reader = FormatterRegistry.getDefaultReader(types[0]);
-        }
-
-        const propMetadata = new PropMetadata(_name, classPropertyName, types, _writer, _reader);
-
-        ObjectMetadata.registerProperty(target.constructor.prototype, propMetadata);
-
-        FormatterRegistry.registerDefaultReader(serializableReader, target.constructor.prototype);
-        FormatterRegistry.registerDefaultWriter(serializableWriter, target.constructor.prototype);
-    };
-
-    /**
-     * Set the name of the json property
-     */
-    SerializableDecorator.names = function(jsonName: string): ISerializableDecorator<T> {
-        _name = jsonName;
-        return this;
-    };
-
-    /**
-     * Set the function to apply when writing the property
-     * (class -> json)
-     */
-    SerializableDecorator.writes = function(writer: Writer<T>): ISerializableDecorator<T> {
-        _writer = writer;
-        return this;
-    };
-
-    /**
-     * Set the function to apply when reading the property
-     * (json -> class)
-     */
-    SerializableDecorator.reads = function(reader: Reader<T>): ISerializableDecorator<T> {
-        _reader = reader;
-        return this;
-    };
-
-    return (SerializableDecorator as any);
+        FormatterRegistry.registerDefaultReader(serializableReader, target.prototype);
+        FormatterRegistry.registerDefaultWriter(serializableWriter, target.prototype);
+    }
 }
 
 export default Serializable;

@@ -40,7 +40,6 @@ Serialize.fromJson(Foo, {});
 
 TODO :
 
-- New serializable decorator syntax
 - JsonName decorator
 - DefaultValue decorator
 - BeforeReads / AfterReads / BeforeWrites / AfterWrites hooks decorators

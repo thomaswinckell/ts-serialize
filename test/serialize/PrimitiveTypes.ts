@@ -5,15 +5,17 @@ import {Serializable, Serialize} from "../../src"
 
 (async function() {
 
+    @Serializable({
+        id: String,
+        bar: Number,
+        bool: Boolean,
+    })
     class Foo {
 
-        @Serializable()
         public id: string;
 
-        @Serializable()
         public bar: number;
 
-        @Serializable()
         public bool: boolean;
 
         constructor(id : string, bar : number, bool : boolean) {

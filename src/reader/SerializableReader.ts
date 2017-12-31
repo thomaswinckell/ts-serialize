@@ -1,18 +1,22 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import SerializeError from "../model/SerializeError";
-import ObjectMetadata from "../metadata/ObjectMetadata";
 import Serialize from "../core/Serialize";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import MetadataHelper from "../metadata/MetadataHelper";
 
 
 const serializableReader: Reader<any> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
 
-    if(json && ObjectMetadata.hasObjectMetadata(prototype)) {
+    if(json && MetadataHelper.hasMetadata(prototype)) {
 
         let obj = new (prototype.constructor as any)();
 
-        const readsPromises = ObjectMetadata.getObjectMetadata(prototype).map(propMetadata => {
+        const metadata = MetadataHelper.getMetadata(prototype);
+
+        const readsPromises = Object.keys(metadata).map(propName => {
+
+            const propMetadata = metadata[propName];
 
             return new Promise((resolve, reject) => {
 
