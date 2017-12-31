@@ -1,5 +1,5 @@
-import {PrototypeListDefinition} from "../core/TypesDefinition";
-import Serialize from "../core/Serialize";
+import {PrototypeListDefinition} from "./TypesDefinition";
+import SerializeHelper from "./SerializeHelper";
 
 /**
  * Utils functions to help handle serialize errors
@@ -46,7 +46,7 @@ namespace SerializeError {
         let toType = 'unknown type';
 
         if(isReading) {
-            toType = typesToString(Serialize.extractPrototypes(types))
+            toType = typesToString(SerializeHelper.extractPrototypes(types))
         } else {
             toType = 'JSON value';
         }

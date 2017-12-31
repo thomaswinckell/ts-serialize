@@ -1,7 +1,7 @@
 import Writer from "./Writer";
-import Serialize from "../core/Serialize";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
-import ObjectMetadata from "../metadata/ObjectMetadata";
+import ObjectMetadata from "../core/ObjectMetadata";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 export default function(objectMetadata: ObjectMetadata) : Writer<any> {
@@ -19,7 +19,7 @@ export default function(objectMetadata: ObjectMetadata) : Writer<any> {
 
                 const newClassPath = [...classPath, `.${propMetadata.propName}`];
 
-                Serialize.writesFromMetadata(propMetadata, obj[propMetadata.propName], newClassPath, failFast)
+                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], newClassPath, failFast)
                     .then(value => resolve({value, propMetadata}))
                     .catch(reject)
             })
@@ -27,7 +27,7 @@ export default function(objectMetadata: ObjectMetadata) : Writer<any> {
 
         return new Promise((resolve, reject) => {
 
-            Serialize.promiseAll(writesPromises, failFast).then((writesResults: any[]) => {
+            SerializeHelper.promiseAll(writesPromises, failFast).then((writesResults: any[]) => {
 
                 writesResults.forEach(res => {
                     json[res.propMetadata.jsonName] = res.value;

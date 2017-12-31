@@ -1,7 +1,7 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import FormatterRegistry from "../core/FormatterRegistry";
-import SerializeError from "../model/SerializeError";
+import SerializeError from "../core/SerializeError";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
 
 

@@ -1,9 +1,9 @@
 import FormatterRegistry from "./FormatterRegistry";
-import {PropMetadata} from "../metadata/ObjectMetadata";
+import {PropMetadata} from "./ObjectMetadata";
 import serializableReader from "../reader/SerializableReader";
 import serializableWriter from "../writer/SerializableWriter";
 import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "./TypesDefinition";
-import Serialize from "./Serialize";
+import SerializeHelper from "./SerializeHelper";
 
 
 export type SerializableArgs = {
@@ -21,7 +21,7 @@ function Serializable<T>(args : SerializableArgs) {
         let objectMetadata = {};
 
         Object.keys(args).forEach(propertyName => {
-            objectMetadata[propertyName] = new PropMetadata(propertyName, propertyName, Serialize.extractPrototypes(args[propertyName]));
+            objectMetadata[propertyName] = new PropMetadata(propertyName, propertyName, SerializeHelper.extractPrototypes(args[propertyName]));
         });
 
         FormatterRegistry.registerDefaultReader(serializableReader(objectMetadata), target.prototype);

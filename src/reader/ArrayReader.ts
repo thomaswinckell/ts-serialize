@@ -2,8 +2,9 @@ import {Json, JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import FormatterRegistry from "../core/FormatterRegistry";
 import Serialize from "../core/Serialize";
-import SerializeError from "../model/SerializeError";
+import SerializeError from "../core/SerializeError";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -18,7 +19,7 @@ const arrayReader: Reader<any[]> = function(json: JsValue, prototype: Object, ge
             return Serialize.reads(val, genericTypes, newClassPath, failFast);
         });
 
-        return Serialize.promiseAll(readsPromises, failFast)
+        return SerializeHelper.promiseAll(readsPromises, failFast)
 
     } else {
         return Promise.reject(SerializeError.readerError([Array, genericTypes], `The value is not an array.`, classPath))

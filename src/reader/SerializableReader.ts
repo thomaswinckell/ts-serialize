@@ -1,9 +1,9 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
-import SerializeError from "../model/SerializeError";
-import Serialize from "../core/Serialize";
+import SerializeError from "../core/SerializeError";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
-import ObjectMetadata from "../metadata/ObjectMetadata";
+import ObjectMetadata from "../core/ObjectMetadata";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -25,7 +25,7 @@ export default function(objectMetadata: ObjectMetadata) : Reader<any> {
                         [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
                         [...classPath, `.${propMetadata.propName}`];
 
-                    Serialize.readsFromMetadata(propMetadata, json[propMetadata.jsonName], newClassPath, failFast)
+                    SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName], newClassPath, failFast)
                         .then(value => resolve({value, propMetadata}))
                         .catch(reject)
                 })
@@ -33,7 +33,7 @@ export default function(objectMetadata: ObjectMetadata) : Reader<any> {
 
             return new Promise((resolve, reject) => {
 
-                Serialize.promiseAll(readsPromises, failFast).then((readsResults: any[]) => {
+                SerializeHelper.promiseAll(readsPromises, failFast).then((readsResults: any[]) => {
 
                     readsResults.forEach(res => {
                         obj[res.propMetadata.propName] = res.value;

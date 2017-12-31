@@ -3,6 +3,7 @@ import Writer from "./Writer";
 import Serialize from "../core/Serialize";
 import {JsValue} from "ts-json-definition";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -16,7 +17,7 @@ const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, prototype:
         const newClassPath = [...classPath, `[${key}]`];
 
         writesPromises.push(
-            Serialize.promiseAll([
+            SerializeHelper.promiseAll([
                 Serialize.writes(value, valueTypes, newClassPath, failFast),
                 Serialize.writes(key, [keyType], newClassPath, failFast),
             ], failFast) as Promise<JsValue>
@@ -25,7 +26,7 @@ const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, prototype:
 
     return new Promise((resolve, reject) => {
 
-        Serialize.promiseAll<JsValue>(writesPromises, failFast)
+        SerializeHelper.promiseAll<JsValue>(writesPromises, failFast)
             .then((mapParts : any[]) => {
                 const map = mapParts.reduce((acc, [value, key]) => { acc[key] = value; return acc; }, {});
                 resolve(map);

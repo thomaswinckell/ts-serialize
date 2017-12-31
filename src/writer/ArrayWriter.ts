@@ -3,6 +3,7 @@ import Writer from "./Writer";
 import Serialize from "../core/Serialize";
 import {JsValue} from "ts-json-definition";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -15,7 +16,7 @@ const arrayWriter: Writer<any[]> = function(arr: any[], prototype: Object, gener
         return Serialize.writes(val, genericTypes, newClassPath, failFast);
     });
 
-    return Serialize.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;
+    return SerializeHelper.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;
 };
 
 FormatterRegistry.registerDefaultWriter(arrayWriter, Array);

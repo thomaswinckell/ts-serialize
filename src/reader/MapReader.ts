@@ -1,10 +1,11 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import FormatterRegistry from "../core/FormatterRegistry";
-import SerializeError from "../model/SerializeError";
+import SerializeError from "../core/SerializeError";
 import Serialize from "../core/Serialize";
 import {isObject} from "../utils/Utils";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 
@@ -18,7 +19,7 @@ const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Obje
             const value = json[key];
             const newClassPath = [...classPath, `[${key}]`];
 
-            return Serialize.promiseAll([
+            return SerializeHelper.promiseAll([
                 Serialize.reads(value, valueTypes, newClassPath, failFast),
                 Serialize.reads(key, [keyType], newClassPath, failFast),
             ], failFast);
@@ -26,7 +27,7 @@ const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Obje
 
         return new Promise((resolve, reject) => {
 
-            Serialize.promiseAll(readsPromises, failFast)
+            SerializeHelper.promiseAll(readsPromises, failFast)
                 .then((mapParts : any[]) => {
                     const map = mapParts.reduce<Map<any, any>>((acc, [value, key]) => {
                         acc.set(key, value);
