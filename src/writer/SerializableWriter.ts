@@ -6,12 +6,11 @@ import SerializeHelper from "../core/SerializeHelper";
 
 
 
-const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: PrototypeListDefinition, givenClassPath: string[], failFast: boolean) {
+const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
 
     if(MetadataHelper.hasMetadata(prototype)) {
 
         let json = {};
-        const classPath = givenClassPath.length === 0 ? [obj.constructor.name] : givenClassPath;
 
         const metadata = MetadataHelper.getMetadata(prototype);
 
@@ -21,7 +20,9 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
 
             return new Promise((resolve, reject) => {
 
-                const newClassPath = [...classPath, `.${propMetadata.propName}`];
+                const newClassPath = classPath.length === 0 ?
+                    [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
+                    [...classPath, `.${propMetadata.propName}`];
 
                 SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], newClassPath, failFast)
                     .then(value => resolve({value, propMetadata}))
@@ -42,7 +43,7 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
             }).catch(reject);
         });
     } else {
-        return Promise.reject(SerializeError.undefinedWriterError([prototype, genericTypes], givenClassPath))
+        return Promise.reject(SerializeError.undefinedWriterError([prototype, genericTypes], classPath))
     }
 };
 
