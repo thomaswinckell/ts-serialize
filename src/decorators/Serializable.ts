@@ -1,18 +1,17 @@
-import "reflect-metadata";
-import FormatterRegistry from "./FormatterRegistry";
+import FormatterRegistry from "../core/FormatterRegistry";
 import {PropMetadata} from "../metadata/ObjectMetadata";
 import serializableReader from "../reader/SerializableReader";
 import serializableWriter from "../writer/SerializableWriter";
-import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "./TypesDefinition";
+import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "../core/TypesDefinition";
 import MetadataHelper from "../metadata/MetadataHelper";
-import SerializeHelper from "./SerializeHelper";
+import SerializeHelper from "../core/SerializeHelper";
 
 
 export type SerializableArgs = {
     [key: string]: TypeListDefinition|PrototypeListDefinition|TypeDefinition<any>|Object
 }
 
-function Serializable<T>(args : SerializableArgs) {
+function Serializable(args : SerializableArgs) {
 
     return function(target: any, classPropertyName?: string) {
 
@@ -23,7 +22,10 @@ function Serializable<T>(args : SerializableArgs) {
         let objectMetadata = {};
 
         Object.keys(args).forEach(propertyName => {
-            objectMetadata[propertyName] = new PropMetadata(propertyName, propertyName, SerializeHelper.extractPrototypes(args[propertyName]));
+            objectMetadata[propertyName] = {
+                propName: propertyName,
+                types: SerializeHelper.extractPrototypes(args[propertyName])
+            } as PropMetadata<any>;
         });
 
         MetadataHelper.registerMetadata(target.prototype, objectMetadata);

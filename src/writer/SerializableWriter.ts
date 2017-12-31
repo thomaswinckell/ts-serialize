@@ -34,7 +34,7 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
             SerializeHelper.promiseAll(writesPromises, failFast).then((writesResults: any[]) => {
 
                 writesResults.forEach(res => {
-                    json[res.propMetadata.jsonName] = res.value;
+                    json[res.propMetadata.jsonName || res.propMetadata.propName] = res.value;
                 });
 
                 resolve(json);

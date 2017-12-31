@@ -24,7 +24,7 @@ const serializableReader: Reader<any> = function(json: JsValue, prototype: Objec
                     [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
                     [...classPath, `.${propMetadata.propName}`];
 
-                    SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName], newClassPath, failFast)
+                    SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName || propMetadata.propName], newClassPath, failFast)
                         .then(value => resolve({value, propMetadata}))
                         .catch(reject)
                 })
