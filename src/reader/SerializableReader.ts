@@ -2,28 +2,27 @@ import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import SerializeError from "../core/SerializeError";
 import {PrototypeListDefinition} from "../core/TypesDefinition";
-import ObjectMetadata from "../core/ObjectMetadata";
+import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "../core/SerializeHelper";
 
 
+const serializableReader: Reader<any> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
 
-export default function(objectMetadata: ObjectMetadata) : Reader<any> {
+    if(json && MetadataHelper.hasMetadata(prototype)) {
 
-    return function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
+        let obj = new (prototype.constructor as any)();
 
-        if(json) {
+        const metadata = MetadataHelper.getMetadata(prototype);
 
-            let obj = new (prototype.constructor as any)();
+        const readsPromises = Object.keys(metadata).map(propName => {
 
-            const readsPromises = Object.keys(objectMetadata).map(propName => {
+            const propMetadata = metadata[propName];
 
-                const propMetadata = objectMetadata[propName];
+            return new Promise((resolve, reject) => {
 
-                return new Promise((resolve, reject) => {
-
-                    const newClassPath = classPath.length === 0 ?
-                        [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
-                        [...classPath, `.${propMetadata.propName}`];
+                const newClassPath = classPath.length === 0 ?
+                    [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
+                    [...classPath, `.${propMetadata.propName}`];
 
                     SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName], newClassPath, failFast)
                         .then(value => resolve({value, propMetadata}))
@@ -31,20 +30,22 @@ export default function(objectMetadata: ObjectMetadata) : Reader<any> {
                 })
             });
 
-            return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
                 SerializeHelper.promiseAll(readsPromises, failFast).then((readsResults: any[]) => {
 
-                    readsResults.forEach(res => {
-                        obj[res.propMetadata.propName] = res.value;
-                    });
+                readsResults.forEach(res => {
+                    obj[res.propMetadata.propName] = res.value;
+                });
 
-                    resolve(obj);
+                resolve(obj);
 
-                }).catch(reject);
-            });
-        } else {
-            return Promise.reject(SerializeError.readerError([prototype, genericTypes], `Serializable value should be an object.`, classPath))
-        }
-    };
+            }).catch(reject);
+        });
+
+    } else {
+        return Promise.reject(SerializeError.undefinedReaderError([prototype, genericTypes], classPath))
+    }
 };
+
+export default serializableReader;

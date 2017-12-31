@@ -1,6 +1,6 @@
 import {JsValue} from "ts-json-definition";
 import {TypeDefinition, PrototypeListDefinition, TypeListDefinition} from "./TypesDefinition";
-import {PropMetadata} from "./ObjectMetadata";
+import {PropMetadata} from "../metadata/ObjectMetadata";
 import Serialize from "./Serialize";
 
 

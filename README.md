@@ -43,6 +43,7 @@ TODO :
 - JsonName decorator
 - DefaultValue decorator
 - BeforeReads / AfterReads / BeforeWrites / AfterWrites hooks decorators
+- Remove reflect-metadata dependency
 - New type definition syntax support (optional, and, or)
 - Optional type and @DefaultValue support
 - Generics supports

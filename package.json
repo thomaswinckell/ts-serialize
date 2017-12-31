@@ -39,6 +39,7 @@
     "test": "ava test/**/*.js; npm run clean"
   },
   "dependencies": {
+    "reflect-metadata": "0.1.10",
     "ts-json-definition": "0.0.2"
   },
   "devDependencies": {

@@ -1,8 +1,10 @@
+import "reflect-metadata";
 import FormatterRegistry from "./FormatterRegistry";
-import {PropMetadata} from "./ObjectMetadata";
+import {PropMetadata} from "../metadata/ObjectMetadata";
 import serializableReader from "../reader/SerializableReader";
 import serializableWriter from "../writer/SerializableWriter";
 import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "./TypesDefinition";
+import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "./SerializeHelper";
 
 
@@ -24,8 +26,10 @@ function Serializable<T>(args : SerializableArgs) {
             objectMetadata[propertyName] = new PropMetadata(propertyName, propertyName, SerializeHelper.extractPrototypes(args[propertyName]));
         });
 
-        FormatterRegistry.registerDefaultReader(serializableReader(objectMetadata), target.prototype);
-        FormatterRegistry.registerDefaultWriter(serializableWriter(objectMetadata), target.prototype);
+        MetadataHelper.registerMetadata(target.prototype, objectMetadata);
+
+        FormatterRegistry.registerDefaultReader(serializableReader, target.prototype);
+        FormatterRegistry.registerDefaultWriter(serializableWriter, target.prototype);
     }
 }
 
