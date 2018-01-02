@@ -24,7 +24,7 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
                     [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
                     [...classPath, `.${propMetadata.propName}`];
 
-                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], failFast, newClassPath, typePath)
+                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], failFast, newClassPath, [])
                     .then(value => resolve({value, propMetadata}))
                     .catch(reject)
             })

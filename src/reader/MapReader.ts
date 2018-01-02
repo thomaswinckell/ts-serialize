@@ -20,8 +20,8 @@ const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Obje
             const newClassPath = [...classPath, `[${key}]`];
 
             return SerializeHelper.promiseAll([
-                Serialize.reads(value, valueTypes, failFast, newClassPath, typePath),
-                Serialize.reads(key, [keyType], failFast, newClassPath, typePath),
+                Serialize.reads(value, valueTypes, failFast, newClassPath, []),
+                Serialize.reads(key, [keyType], failFast, newClassPath, []),
             ], failFast);
         });
 

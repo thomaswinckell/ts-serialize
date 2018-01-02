@@ -41,7 +41,7 @@ import {Serializable, Serialize} from "../../src"
         'Foo.id cannot be serialized into String|Number.\nCause: The value is not a number value.',
     ];
 
-    test(`Handles reads/writes error`, t => {
+    test(`Handles reads/writes error with | operator`, t => {
 
         return Serialize.reads(badJson, Foo, false)
             .then(() => t.fail('An error should be raised while serializing `badJson`'))

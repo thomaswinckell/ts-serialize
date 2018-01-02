@@ -13,7 +13,7 @@ const arrayWriter: Writer<any[]> = function(arr: any[], prototype: Object, gener
 
         const newClassPath = [...classPath, `[${index}]`];
 
-        return Serialize.writes(val, genericTypes, failFast, newClassPath, typePath);
+        return Serialize.writes(val, genericTypes, failFast, newClassPath, []);
     });
 
     return SerializeHelper.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;

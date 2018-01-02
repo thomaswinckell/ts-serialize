@@ -67,7 +67,7 @@ namespace SerializeError {
                     shouldPutComma: false,
                     value : curr.length > 0 ? `${acc.value}<${typesToString(curr)}>` : acc.value
                 };
-            } else if(curr === "|") {
+            } else if(curr === "|" || curr === "&") {
                 return {
                     shouldPutComma: false,
                     value: `${acc.value}${curr}`

@@ -18,8 +18,8 @@ const mapWriter: Writer<Map<any, any>> = function(map: Map<any, any>, prototype:
 
         writesPromises.push(
             SerializeHelper.promiseAll([
-                Serialize.writes(value, valueTypes, failFast, newClassPath, typePath),
-                Serialize.writes(key, [keyType], failFast, newClassPath, typePath),
+                Serialize.writes(value, valueTypes, failFast, newClassPath, []),
+                Serialize.writes(key, [keyType], failFast, newClassPath, []),
             ], failFast) as Promise<JsValue>
         )
     });

@@ -21,8 +21,8 @@ const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, 
                 [...classPath, `[${key}]`];
 
             return SerializeHelper.promiseAll([
-                Serialize.reads(value, valueTypes, failFast, newClassPath, typePath),
-                Serialize.reads(key, [keyType], failFast, newClassPath, typePath),
+                Serialize.reads(value, valueTypes, failFast, newClassPath, []),
+                Serialize.reads(key, [keyType], failFast, newClassPath, []),
             ], failFast);
         });
 

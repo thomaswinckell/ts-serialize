@@ -16,7 +16,7 @@ const arrayReader: Reader<any[]> = function(json: JsValue, prototype: Object, ge
 
             const newClassPath = [...classPath, `[${index}]`];
 
-            return Serialize.reads(val, genericTypes, failFast, newClassPath, typePath);
+            return Serialize.reads(val, genericTypes, failFast, newClassPath, []);
         });
 
         return SerializeHelper.promiseAll(readsPromises, failFast)

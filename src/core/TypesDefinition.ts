@@ -1,4 +1,4 @@
-export type TypeOperator = "|";
+export type TypeOperator = "|"|"&";
 
 export type ArgTypeDefinition<T> = {
     new (...args: any[]): T;

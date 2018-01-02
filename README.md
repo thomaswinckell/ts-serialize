@@ -48,3 +48,4 @@ TODO :
 - Runtime generics supports for serializable class with generics
 - Formatter registry, see TODO
 - Any formatter
+- Serializable class should have a default constructor (if there's no way to enforce it, say it in the docs)
