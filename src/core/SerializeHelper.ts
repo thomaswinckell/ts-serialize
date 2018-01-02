@@ -1,5 +1,5 @@
 import {JsValue} from "ts-json-definition";
-import {TypeDefinition, PrototypeListDefinition, TypeListDefinition} from "./TypesDefinition";
+import {TypeListDefinition, ArgsTypeListDefinition, TypeOperator} from "./TypesDefinition";
 import {PropMetadata} from "../metadata/ObjectMetadata";
 import Serialize from "./Serialize";
 
@@ -7,24 +7,24 @@ import Serialize from "./Serialize";
 
 namespace SerializeHelper {
 
-    export function readsFromMetadata<T>(propMetadata: PropMetadata<T>, value: JsValue, classPath: string[], failFast: boolean) : Promise<T> {
+    export function readsFromMetadata<T>(propMetadata: PropMetadata<T>, value: JsValue, failFast: boolean, classPath: string[], typePath: TypeListDefinition) : Promise<T> {
 
         if(propMetadata.reader) {
-            return propMetadata.reader(value, firstTypeFromTypes(propMetadata.types), genericTypesFromTypes(propMetadata.types), classPath, failFast)
+            return propMetadata.reader(value, firstTypeFromTypes(propMetadata.types), genericTypesFromTypes(propMetadata.types), classPath, typePath, failFast)
         } else {
-            return Serialize.reads(value, propMetadata.types, classPath, failFast)
+            return Serialize.reads(value, propMetadata.types, failFast, classPath, typePath)
         }
     }
 
-    export function writesFromMetadata<T>(propMetadata: PropMetadata<T>, value: T, classPath: string[], failFast: boolean) : Promise<JsValue> {
+    export function writesFromMetadata<T>(propMetadata: PropMetadata<T>, value: T, failFast: boolean, classPath: string[], typePath: TypeListDefinition) : Promise<JsValue> {
         if(propMetadata.writer) {
-            return propMetadata.writer(value, firstTypeFromTypes(propMetadata.types), genericTypesFromTypes(propMetadata.types), classPath, failFast)
+            return propMetadata.writer(value, firstTypeFromTypes(propMetadata.types), genericTypesFromTypes(propMetadata.types), classPath, typePath, failFast)
         } else {
-            return Serialize.writes(value, propMetadata.types, classPath, failFast)
+            return Serialize.writes(value, propMetadata.types, failFast, classPath, typePath)
         }
     }
 
-    export function extractPrototypes(mbTypes: TypeListDefinition|PrototypeListDefinition|TypeDefinition<any>|Object) : PrototypeListDefinition {
+    export function extractPrototypes(mbTypes: ArgsTypeListDefinition<any>) : TypeListDefinition {
 
         if(!(mbTypes instanceof Array)) {
             return [(mbTypes as any).prototype || mbTypes];
@@ -38,11 +38,11 @@ namespace SerializeHelper {
         });
     }
 
-    export function firstTypeFromTypes(types: PrototypeListDefinition) : Object {
-        return types[0] instanceof Array ? firstTypeFromTypes(types[0] as PrototypeListDefinition) : types[0] as Object;
+    export function firstTypeFromTypes(types: TypeListDefinition) : Object|TypeOperator {
+        return types[0] instanceof Array ? firstTypeFromTypes(types[0] as TypeListDefinition) : types[0] as Object|TypeOperator;
     }
 
-    export function genericTypesFromTypes(types: PrototypeListDefinition) : PrototypeListDefinition {
+    export function genericTypesFromTypes(types: TypeListDefinition) : TypeListDefinition {
         if(!types[1]) {
             return [];
         }

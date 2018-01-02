@@ -1,6 +1,5 @@
 import Writer from "../writer/Writer";
 import Reader from "../reader/Reader";
-import {TypeDefinition} from "./TypesDefinition";
 
 
 
@@ -16,21 +15,21 @@ namespace FormatterRegistry {
     let writersStore = {};
     let readersStore = {};
 
-    function typeToPrototype(type: Object|TypeDefinition<any>) : any {
+    function typeToPrototype(type: Object|{new (...args: any[]): any;}) : any {
         return (type as any).prototype ? (type as any).prototype : type;
     }
 
     /**
      * Get the default writer for the given types
      */
-    export function getDefaultWriter<T>(type: Object|TypeDefinition<T>) : Writer<T>|undefined {
+    export function getDefaultWriter<T>(type: Object|{new (...args: any[]): T;}) : Writer<T>|undefined {
         return writersStore[typeToPrototype(type).constructor.name];
     }
 
     /**
      * Register a default writer for the given types
      */
-    export function registerDefaultWriter<T>(writer : Writer<T>, type: Object|TypeDefinition<T>) {
+    export function registerDefaultWriter<T>(writer : Writer<T>, type: Object|{new (...args: any[]): T;}) {
         writersStore[typeToPrototype(type).constructor.name] = writer;
     }
 
@@ -44,7 +43,7 @@ namespace FormatterRegistry {
     /**
      * Register a default reader for the given types
      */
-    export function registerDefaultReader<T>(reader : Reader<T>, type : Object|TypeDefinition<T>) {
+    export function registerDefaultReader<T>(reader : Reader<T>, type : Object|{new (...args: any[]): T;}) {
         readersStore[typeToPrototype(type).constructor.name] = reader;
     }
 }

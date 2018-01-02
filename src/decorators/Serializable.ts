@@ -2,13 +2,13 @@ import FormatterRegistry from "../core/FormatterRegistry";
 import {PropMetadata} from "../metadata/ObjectMetadata";
 import serializableReader from "../reader/SerializableReader";
 import serializableWriter from "../writer/SerializableWriter";
-import {PrototypeListDefinition, TypeDefinition, TypeListDefinition} from "../core/TypesDefinition";
+import {ArgsTypeListDefinition} from "../core/TypesDefinition";
 import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "../core/SerializeHelper";
 
 
 export type SerializableArgs = {
-    [key: string]: TypeListDefinition|PrototypeListDefinition|TypeDefinition<any>|Object
+    [key: string]: ArgsTypeListDefinition<any>
 }
 
 function Serializable(args : SerializableArgs) {

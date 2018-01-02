@@ -60,7 +60,7 @@ import {Serializable, Serialize} from "../../src"
 
     test(`Handles reads/writes error`, t => {
 
-        return Serialize.reads(badJson, Foo, [], false)
+        return Serialize.reads(badJson, Foo, false)
             .then(() => t.fail('An error should be raised while serializing `badJson`'))
             .catch((err : Error[]) => {
                 const messages = err.map(e => e.message);

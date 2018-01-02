@@ -3,9 +3,9 @@ import test from "ava"
 import {Serializable, Serialize, Writes} from "../../src"
 import Writer from "../../src/writer/Writer";
 import SerializeError from "../../src/core/SerializeError";
-import {PrototypeListDefinition} from "../../src/core/TypesDefinition";
+import {TypeListDefinition} from "../../src/core/TypesDefinition";
 
-const customWriter: Writer<String> = function(value: String, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[]) {
+const customWriter: Writer<String> = function(value: String, prototype: Object, genericTypes: TypeListDefinition, classPath: string[]) {
     return new Promise((resolve, reject) => {
         if(value !== "error") {
             resolve(value + '_custom')

@@ -1,8 +1,12 @@
-export type TypeDefinition<T> = {
+export type TypeOperator = "|";
+
+export type ArgTypeDefinition<T> = {
     new (...args: any[]): T;
-};
+}|Object|TypeOperator;
 
-export type TypeListDefinition = (TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|(TypeDefinition<any>|TypeDefinition<any>[])[])[])[])[])[])[])[])[])[];
+export type ArgsTypeListDefinition<T> = ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|(ArgTypeDefinition<T>|ArgTypeDefinition<T>[])[])[])[])[])[])[])[])[])[];
 
-export type PrototypeListDefinition = (Object|(Object|(Object|(Object|(Object|(Object|(Object|(Object|(Object|Object[])[])[])[])[])[])[])[])[])[];
+export type TypeDefinition = Object|TypeOperator;
+
+export type TypeListDefinition = (TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|(TypeDefinition|TypeDefinition[])[])[])[])[])[])[])[])[])[];
 

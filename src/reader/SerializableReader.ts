@@ -1,12 +1,12 @@
 import {JsValue} from "ts-json-definition";
 import Reader from "./Reader";
 import SerializeError from "../core/SerializeError";
-import {PrototypeListDefinition} from "../core/TypesDefinition";
+import {TypeListDefinition} from "../core/TypesDefinition";
 import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "../core/SerializeHelper";
 
 
-const serializableReader: Reader<any> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
+const serializableReader: Reader<any> = function(json: JsValue, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
     if(json && MetadataHelper.hasMetadata(prototype)) {
 
@@ -24,7 +24,7 @@ const serializableReader: Reader<any> = function(json: JsValue, prototype: Objec
                     [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
                     [...classPath, `.${propMetadata.propName}`];
 
-                    SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName || propMetadata.propName], newClassPath, failFast)
+                    SerializeHelper.readsFromMetadata(propMetadata, json[propMetadata.jsonName || propMetadata.propName], failFast, newClassPath, typePath)
                         .then(value => resolve({value, propMetadata}))
                         .catch(reject)
                 })
@@ -44,7 +44,7 @@ const serializableReader: Reader<any> = function(json: JsValue, prototype: Objec
         });
 
     } else {
-        return Promise.reject(SerializeError.undefinedReaderError([prototype, genericTypes], classPath))
+        return Promise.reject(SerializeError.undefinedReaderError([...typePath, prototype, genericTypes], classPath))
     }
 };
 

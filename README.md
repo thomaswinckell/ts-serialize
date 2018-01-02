@@ -40,10 +40,11 @@ Serialize.fromJson(Foo, {});
 
 TODO :
 
+- New type definition syntax support (optional, and, or)
 - DefaultValue decorator
 - BeforeReads / AfterReads / BeforeWrites / AfterWrites hooks decorators
-- New type definition syntax support (optional, and, or)
 - Optional type and @DefaultValue support
 - Generics supports
 - Runtime generics supports for serializable class with generics
 - Formatter registry, see TODO
+- Any formatter

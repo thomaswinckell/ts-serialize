@@ -1,4 +1,4 @@
-import {PrototypeListDefinition} from "./TypesDefinition";
+import {ArgsTypeListDefinition, TypeListDefinition} from "./TypesDefinition";
 import SerializeHelper from "./SerializeHelper";
 
 /**
@@ -6,18 +6,18 @@ import SerializeHelper from "./SerializeHelper";
  */
 namespace SerializeError {
 
-    export function writerError(types: PrototypeListDefinition, writerError: any, classPath: string[]) {
+    export function writerError(types: ArgsTypeListDefinition<any>, writerError: any, classPath: string[]) {
         return readerWriterError(types, writerError, classPath, false);
     }
 
-    export function readerError(types: PrototypeListDefinition, writerError: any, classPath: string[]) {
+    export function readerError(types: ArgsTypeListDefinition<any>, writerError: any, classPath: string[]) {
         return readerWriterError(types, writerError, classPath, true);
     }
 
     /**
      *  Format a clear error message used when a reader is not found for the given types
      */
-    export function undefinedReaderError(types: PrototypeListDefinition, classPath: string[]) {
+    export function undefinedReaderError(types: TypeListDefinition, classPath: string[]) {
         if(classPath.length === 0) {
             return new Error(`Cannot find reader for type ${typesToString(types)}.`)
         }
@@ -28,7 +28,7 @@ namespace SerializeError {
     /**
      *  Format a clear error message used when a writer is not found for the given types
      */
-    export function undefinedWriterError(types: PrototypeListDefinition, classPath: string[]) {
+    export function undefinedWriterError(types: TypeListDefinition, classPath: string[]) {
         if(classPath.length === 0) {
             return new Error(`Cannot find writer for type '${typesToString(types)}'.`)
         }
@@ -39,7 +39,7 @@ namespace SerializeError {
     /**
      * Format a clear error message for readers/writers errors
      */
-    function readerWriterError(types : PrototypeListDefinition, writerError: any, classPath: string[], isReading: boolean) : Error {
+    function readerWriterError(types : ArgsTypeListDefinition<any>, writerError: any, classPath: string[], isReading: boolean) : Error {
 
         const writerMessage = writerError instanceof Error ? writerError.message : writerError.toString();
 
@@ -60,22 +60,27 @@ namespace SerializeError {
      * Print types
      * Ex : [Map[String, Number]] -> "Map<String, Number>"
      */
-    function typesToString(types : PrototypeListDefinition) : string {
+    function typesToString(types : TypeListDefinition) : string {
         return types.reduce((acc: any, curr: any) => {
             if(curr instanceof Array) {
                 return {
-                    isPreviousArray: true,
+                    shouldPutComma: false,
                     value : curr.length > 0 ? `${acc.value}<${typesToString(curr)}>` : acc.value
                 };
+            } else if(curr === "|") {
+                return {
+                    shouldPutComma: false,
+                    value: `${acc.value}${curr}`
+                }
             } else {
                 const typeName = curr.constructor.name.toString();
                 return {
-                    isPreviousArray: false,
-                    value: `${acc.value}${acc.isPreviousArray ? '' : ', '}${typeName}`
+                    shouldPutComma: true,
+                    value: `${acc.value}${acc.shouldPutComma ? ', ' : ''}${typeName}`
                 }
             }
         }, {
-            isPreviousArray : true,
+            shouldPutComma : false,
             value: ''
         }).value
     }

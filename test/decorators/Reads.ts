@@ -4,9 +4,9 @@ import {Serializable, Serialize, Reads} from "../../src"
 import Reader from "../../src/reader/Reader";
 import {JsValue} from "ts-json-definition";
 import SerializeError from "../../src/core/SerializeError";
-import {PrototypeListDefinition} from "../../src/core/TypesDefinition";
+import {TypeListDefinition} from "../../src/core/TypesDefinition";
 
-const customReader: Reader<String> = function(value: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[]) {
+const customReader: Reader<String> = function(value: JsValue, prototype: Object, genericTypes: TypeListDefinition, classPath: string[]) {
     return new Promise((resolve, reject) => {
         if(typeof value === 'string') {
             resolve(value + '_custom')

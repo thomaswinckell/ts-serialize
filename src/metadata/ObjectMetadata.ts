@@ -1,10 +1,10 @@
 import Writer from "../writer/Writer";
 import Reader from "../reader/Reader";
-import {PrototypeListDefinition} from "../core/TypesDefinition";
+import {TypeListDefinition} from "../core/TypesDefinition";
 
 
 export interface PropMetadata<T> {
-    types : PrototypeListDefinition;
+    types : TypeListDefinition;
     propName : string;
     jsonName ?: string;
     writer ?: Writer<T>;

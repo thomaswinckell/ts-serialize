@@ -1,12 +1,12 @@
 import Writer from "./Writer";
 import SerializeError from "../core/SerializeError";
-import {PrototypeListDefinition} from "../core/TypesDefinition";
+import {TypeListDefinition} from "../core/TypesDefinition";
 import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "../core/SerializeHelper";
 
 
 
-const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
+const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
     if(MetadataHelper.hasMetadata(prototype)) {
 
@@ -24,7 +24,7 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
                     [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
                     [...classPath, `.${propMetadata.propName}`];
 
-                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], newClassPath, failFast)
+                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], failFast, newClassPath, typePath)
                     .then(value => resolve({value, propMetadata}))
                     .catch(reject)
             })
@@ -43,7 +43,7 @@ const serializableWriter: Writer<any> = function(obj: any, prototype: Object, ge
             }).catch(reject);
         });
     } else {
-        return Promise.reject(SerializeError.undefinedWriterError([prototype, genericTypes], classPath))
+        return Promise.reject(SerializeError.undefinedWriterError([...typePath, prototype, genericTypes], classPath))
     }
 };
 

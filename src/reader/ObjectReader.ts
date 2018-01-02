@@ -4,11 +4,11 @@ import FormatterRegistry from "../core/FormatterRegistry";
 import SerializeError from "../core/SerializeError";
 import Serialize from "../core/Serialize";
 import {isObject} from "../utils/Utils";
-import {PrototypeListDefinition} from "../core/TypesDefinition";
+import {TypeListDefinition} from "../core/TypesDefinition";
 import SerializeHelper from "../core/SerializeHelper";
 
 
-const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, genericTypes: PrototypeListDefinition, classPath: string[], failFast: boolean) {
+const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
     if(isObject(json)) {
 
@@ -21,8 +21,8 @@ const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, 
                 [...classPath, `[${key}]`];
 
             return SerializeHelper.promiseAll([
-                Serialize.reads(value, valueTypes, newClassPath, failFast),
-                Serialize.reads(key, [keyType], newClassPath, failFast),
+                Serialize.reads(value, valueTypes, failFast, newClassPath, typePath),
+                Serialize.reads(key, [keyType], failFast, newClassPath, typePath),
             ], failFast);
         });
 
@@ -39,7 +39,7 @@ const objectReader: Reader<Object> = function(json: JsValue, prototype: Object, 
                 .catch(reject)
         });
     } else {
-        return Promise.reject(SerializeError.readerError([Array, genericTypes], `The value is not an object.`, classPath))
+        return Promise.reject(SerializeError.readerError([...typePath, Object, genericTypes], `The value is not an object.`, classPath))
     }
 };
 
