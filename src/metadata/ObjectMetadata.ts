@@ -7,7 +7,7 @@ export interface PropMetadata<T> {
     types : TypeListDefinition;
     propName : string;
     jsonName ?: string;
-    writer ?: Writer<T>;
+    writer ?: Writer;
     reader ?: Reader<T>;
 }
 

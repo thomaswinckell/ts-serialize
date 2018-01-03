@@ -1,5 +1,5 @@
 import {JsValue} from "ts-json-definition";
-import {ArgsTypeListDefinition, ArgTypeDefinition, TypeListDefinition} from "./TypesDefinition";
+import {ArgsTypeListDefinition, ArgTypeDefinition, TypeDefinition, TypeListDefinition} from "./TypesDefinition";
 import FormatterRegistry from "./FormatterRegistry";
 import SerializeError from "./SerializeError";
 import SerializeHelper from "./SerializeHelper";
@@ -11,6 +11,34 @@ namespace Serialize {
     export function reads<T>(value: JsValue, types: ArgsTypeListDefinition<T>, failFast: boolean = true, classPath: string[] = [], typePath: TypeListDefinition = []) : Promise<T> {
 
         const prototypes = SerializeHelper.extractPrototypes(types);
+
+        if(prototypes[0] === '(') {
+            let openParenthesisCount = 1;
+            let closeParenthesisIndex = -1;
+            let index = 1;
+
+            while(index < prototypes.length && closeParenthesisIndex === -1) {
+                if(prototypes[index] === '(') {
+                    openParenthesisCount += 1;
+                } else if(prototypes[index] === ')') {
+                    openParenthesisCount -= 1;
+                }
+                if(openParenthesisCount === 0) {
+                    closeParenthesisIndex = index;
+                }
+                index++;
+            }
+
+            if(prototypes[closeParenthesisIndex + 1] === '|') {
+                return readsOr(value, prototypes.slice(1, closeParenthesisIndex), prototypes.slice(closeParenthesisIndex + 2, prototypes.length), failFast, classPath, typePath);
+            }
+
+            if(prototypes[closeParenthesisIndex + 1] === '&') {
+                return readsAnd(value, prototypes.slice(1, closeParenthesisIndex), prototypes.slice(closeParenthesisIndex + 2, prototypes.length), failFast, classPath, typePath);
+            }
+
+            return reads(value, prototypes.slice(1, closeParenthesisIndex), failFast, classPath, ['(', ...typePath, ')']);
+        }
 
         if(prototypes[1] === '|') {
             return readsOr(value, prototypes[0], prototypes.slice(2, prototypes.length), failFast, classPath, typePath);
@@ -34,6 +62,34 @@ namespace Serialize {
     export function writes(value: any, types: ArgsTypeListDefinition<any>, failFast: boolean = true, classPath: string[] = [], typePath: TypeListDefinition = []) : Promise<JsValue> {
 
         const prototypes = SerializeHelper.extractPrototypes(types);
+
+        if(prototypes[0] === '(') {
+            let openParenthesisCount = 1;
+            let closeParenthesisIndex = -1;
+            let index = 1;
+
+            while(index < prototypes.length && closeParenthesisIndex === -1) {
+                if(prototypes[index] === '(') {
+                    openParenthesisCount += 1;
+                } else if(prototypes[index] === ')') {
+                    openParenthesisCount -= 1;
+                }
+                if(openParenthesisCount === 0) {
+                    closeParenthesisIndex = index;
+                }
+                index++;
+            }
+
+            if(prototypes[closeParenthesisIndex + 1] === '|') {
+                return writesOr(value, prototypes.slice(1, closeParenthesisIndex), prototypes.slice(closeParenthesisIndex + 2, prototypes.length), failFast, classPath, typePath);
+            }
+
+            if(prototypes[closeParenthesisIndex + 1] === '&') {
+                return writesAnd(value, prototypes.slice(1, closeParenthesisIndex), prototypes.slice(closeParenthesisIndex + 2, prototypes.length), failFast, classPath, typePath);
+            }
+
+            return writes(value, prototypes.slice(1, closeParenthesisIndex), failFast, classPath, ['(', ...typePath, ')']);
+        }
 
         if(prototypes[1] === '|') {
             return writesOr(value, prototypes[0], prototypes.slice(2, prototypes.length), failFast, classPath, typePath);
@@ -98,11 +154,11 @@ namespace Serialize {
     function writesAnd(value: any, type1: ArgTypeDefinition<any>, type2: ArgTypeDefinition<any>, failFast: boolean, classPath: string[], typePath: TypeListDefinition) : Promise<JsValue> {
 
         return new Promise((resolve, reject) => {
-            reads(value, type1, failFast, classPath, typePath)
+            writes(value, type1, failFast, classPath, typePath)
                 .then(newValue => {
-                    reads(value, type2, failFast, classPath, [...typePath, type1, "&"])
+                    writes(value, type2, failFast, classPath, [...typePath, type1, "&"])
                         .then(newValue2 => {
-                            resolve(Object.assign({}, newValue, newValue2));
+                            resolve(Object.assign({}, newValue, newValue2))
                         })
                         .catch(reject)
                 })

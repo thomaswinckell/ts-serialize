@@ -3,48 +3,53 @@ import SerializeError from "../core/SerializeError";
 import {TypeListDefinition} from "../core/TypesDefinition";
 import MetadataHelper from "../metadata/MetadataHelper";
 import SerializeHelper from "../core/SerializeHelper";
+import {isObject} from "../utils/Validators";
 
 
 
-const serializableWriter: Writer<any> = function(obj: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
+const serializableWriter: Writer = function(obj: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
-    if(MetadataHelper.hasMetadata(prototype)) {
+    if(!MetadataHelper.hasMetadata(prototype)) {
+        return Promise.reject(SerializeError.undefinedWriterError([...typePath, prototype, genericTypes], classPath))
+    }
 
-        let json = {};
+    if(!isObject(obj)) {
+        return Promise.reject(SerializeError.writerError([...typePath, prototype, genericTypes], `The value is not an object.`, classPath))
+    }
 
-        const metadata = MetadataHelper.getMetadata(prototype);
+    let json = {};
 
-        const writesPromises = Object.keys(metadata).map(propName => {
+    const metadata = MetadataHelper.getMetadata(prototype);
 
-            const propMetadata = metadata[propName];
+    const writesPromises = Object.keys(metadata).map(propName => {
 
-            return new Promise((resolve, reject) => {
-
-                const newClassPath = classPath.length === 0 ?
-                    [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
-                    [...classPath, `.${propMetadata.propName}`];
-
-                SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], failFast, newClassPath, [])
-                    .then(value => resolve({value, propMetadata}))
-                    .catch(reject)
-            })
-        });
+        const propMetadata = metadata[propName];
 
         return new Promise((resolve, reject) => {
 
-            SerializeHelper.promiseAll(writesPromises, failFast).then((writesResults: any[]) => {
+            const newClassPath = classPath.length === 0 ?
+                [(prototype.constructor as any).name, `.${propMetadata.propName}`] :
+                [...classPath, `.${propMetadata.propName}`];
 
-                writesResults.forEach(res => {
-                    json[res.propMetadata.jsonName || res.propMetadata.propName] = res.value;
-                });
+            SerializeHelper.writesFromMetadata(propMetadata, obj[propMetadata.propName], failFast, newClassPath, [])
+                .then(value => resolve({value, propMetadata}))
+                .catch(reject)
+        })
+    });
 
-                resolve(json);
+    return new Promise((resolve, reject) => {
 
-            }).catch(reject);
-        });
-    } else {
-        return Promise.reject(SerializeError.undefinedWriterError([...typePath, prototype, genericTypes], classPath))
-    }
+        SerializeHelper.promiseAll(writesPromises, failFast).then((writesResults: any[]) => {
+
+            writesResults.forEach(res => {
+                json[res.propMetadata.jsonName || res.propMetadata.propName] = res.value;
+            });
+
+            resolve(json);
+
+        }).catch(reject);
+    });
+
 };
 
 export default serializableWriter;

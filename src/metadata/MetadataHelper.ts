@@ -44,7 +44,7 @@ namespace MetadataHelper {
         setPartialMetadata(target, {[propName] : { reader }});
     }
 
-    export function setWriter(target: Object, propName: string, writer: Writer<any>): void {
+    export function setWriter(target: Object, propName: string, writer: Writer): void {
         setPartialMetadata(target, {[propName] : { writer }});
     }
 }

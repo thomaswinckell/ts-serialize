@@ -44,8 +44,8 @@ TODO :
 - DefaultValue decorator
 - BeforeReads / AfterReads / BeforeWrites / AfterWrites hooks decorators
 - Optional type and @DefaultValue support
-- Generics supports
-- Runtime generics supports for serializable class with generics
-- Formatter registry, see TODO
+- Formatter registry, see TODO (put formatters in class metadata)
 - Any formatter
+- Runtime generics supports for serializable class with generics
+- Review error system and messages
 - Serializable class should have a default constructor (if there's no way to enforce it, say it in the docs)

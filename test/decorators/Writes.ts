@@ -5,7 +5,7 @@ import Writer from "../../src/writer/Writer";
 import SerializeError from "../../src/core/SerializeError";
 import {TypeListDefinition} from "../../src/core/TypesDefinition";
 
-const customWriter: Writer<String> = function(value: String, prototype: Object, genericTypes: TypeListDefinition, classPath: string[]) {
+const customWriter: Writer = function(value: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[]) {
     return new Promise((resolve, reject) => {
         if(value !== "error") {
             resolve(value + '_custom')
@@ -32,12 +32,12 @@ const customWriter: Writer<String> = function(value: String, prototype: Object, 
             }
         }
 
-        const fooJson = await Serialize.writes({id: 'abc'}, Foo) as any;
+        const fooJson = await Serialize.writes(new Foo('abc'), Foo) as any;
 
         test(`@Writes should override the default writer.`, t => {
             t.is(fooJson.id, 'abc_custom');
 
-            return Serialize.writes({id: 'error'}, Foo)
+            return Serialize.writes(new Foo('error'), Foo)
                 .then(() => t.fail('An error should be raised when an custom writer is not found'))
                 .catch((err : Error) => {
                     const expected = "Foo.id cannot be serialized into JSON value.\nCause: Custom error";

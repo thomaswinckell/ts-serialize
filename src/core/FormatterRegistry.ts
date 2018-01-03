@@ -22,14 +22,14 @@ namespace FormatterRegistry {
     /**
      * Get the default writer for the given types
      */
-    export function getDefaultWriter<T>(type: Object|{new (...args: any[]): T;}) : Writer<T>|undefined {
+    export function getDefaultWriter<T>(type: Object|{new (...args: any[]): T;}) : Writer|undefined {
         return writersStore[typeToPrototype(type).constructor.name];
     }
 
     /**
      * Register a default writer for the given types
      */
-    export function registerDefaultWriter<T>(writer : Writer<T>, type: Object|{new (...args: any[]): T;}) {
+    export function registerDefaultWriter<T>(writer : Writer, type: Object|{new (...args: any[]): T;}) {
         writersStore[typeToPrototype(type).constructor.name] = writer;
     }
 

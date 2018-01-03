@@ -5,12 +5,13 @@ import Serialize from "../core/Serialize";
 import SerializeError from "../core/SerializeError";
 import {TypeListDefinition} from "../core/TypesDefinition";
 import SerializeHelper from "../core/SerializeHelper";
+import {isArray} from "../utils/Validators";
 
 
 
 const arrayReader: Reader<any[]> = function(json: JsValue, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
-    if(Array.isArray(json)) {
+    if(isArray(json)) {
 
         const readsPromises = (json as Array<Json>).map((val: Json, index: number) => {
 

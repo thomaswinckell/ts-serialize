@@ -3,7 +3,7 @@ import Reader from "./Reader";
 import FormatterRegistry from "../core/FormatterRegistry";
 import SerializeError from "../core/SerializeError";
 import Serialize from "../core/Serialize";
-import {isObject} from "../utils/Utils";
+import {isPlainObject} from "../utils/Validators";
 import {TypeListDefinition} from "../core/TypesDefinition";
 import SerializeHelper from "../core/SerializeHelper";
 
@@ -11,7 +11,7 @@ import SerializeHelper from "../core/SerializeHelper";
 
 const mapReader: Reader<Map<any, any>> = function(json: JsValue, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
-    if(isObject(json)) {
+    if(isPlainObject(json)) {
 
         const [keyType, ...valueTypes] = genericTypes;
 

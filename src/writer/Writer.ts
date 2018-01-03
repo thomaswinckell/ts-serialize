@@ -10,6 +10,6 @@ import {TypeListDefinition} from "../core/TypesDefinition";
  * @parentClass The parent of the class value to write (useful for corner cases)
  * @parentJson The parent of the produced json value (useful for corner cases)
  */
-type Writer<T> = (value: T, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) => Promise<JsValue>;
+type Writer = (value: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) => Promise<JsValue>;
 
 export default Writer;

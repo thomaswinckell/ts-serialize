@@ -4,19 +4,27 @@ import Serialize from "../core/Serialize";
 import {JsValue} from "ts-json-definition";
 import {TypeListDefinition} from "../core/TypesDefinition";
 import SerializeHelper from "../core/SerializeHelper";
+import {isArray} from "../utils/Validators";
+import SerializeError from "../core/SerializeError";
 
 
 
-const arrayWriter: Writer<any[]> = function(arr: any[], prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
+const arrayWriter: Writer = function(arr: any, prototype: Object, genericTypes: TypeListDefinition, classPath: string[], typePath: TypeListDefinition, failFast: boolean) {
 
-    const writesPromises = arr.map((val: any, index: number) => {
+    if(isArray(arr)) {
 
-        const newClassPath = [...classPath, `[${index}]`];
+        const writesPromises = arr.map((val: any, index: number) => {
 
-        return Serialize.writes(val, genericTypes, failFast, newClassPath, []);
-    });
+            const newClassPath = [...classPath, `[${index}]`];
 
-    return SerializeHelper.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;
+            return Serialize.writes(val, genericTypes, failFast, newClassPath, []);
+        });
+
+        return SerializeHelper.promiseAll<JsValue>(writesPromises, failFast) as Promise<JsValue>;
+
+    } else {
+        return Promise.reject(SerializeError.writerError([...typePath, Array, genericTypes], `The value is not an array.`, classPath))
+    }
 };
 
 FormatterRegistry.registerDefaultWriter(arrayWriter, Array);

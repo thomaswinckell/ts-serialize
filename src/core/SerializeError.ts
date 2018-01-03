@@ -36,6 +36,14 @@ namespace SerializeError {
         return new Error(`Cannot find writer for ${classPath.join('')} of type ${typesToString(types)}.`);
     }
 
+    export function badTypeWriterError(types: TypeListDefinition, value: any, classPath: string[]) {
+        if(classPath.length === 0) {
+            return new Error(`Error while writing ${value}. It has not the good type, it should be a '${typesToString(types)}'.`)
+        }
+
+        return new Error(`Error while writing ${classPath.join('')}. It has not the good type, it should be a ${typesToString(types)}.`);
+    }
+
     /**
      * Format a clear error message for readers/writers errors
      */

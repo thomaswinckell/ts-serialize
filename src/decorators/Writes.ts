@@ -2,7 +2,7 @@ import MetadataHelper from "../metadata/MetadataHelper";
 import Writer from "../writer/Writer";
 
 
-export default function Writes<T>(writer: Writer<T>) {
+export default function Writes<T>(writer: Writer) {
 
     return function(target: any, classPropertyName?: string) {
 
